@@ -1,0 +1,42 @@
+Events:
+  Reward-Locked:
+    - '[sound] sound=ENTITY_ENDERMAN_TELEPORT pitch=0 yaw=1'
+    - '[msg] %prefix%&cYou need a higher level to receive this reward!'
+  Reward-Received:
+    - '[sound] sound=ENTITY_ENDERMAN_TELEPORT pitch=0 yaw=1'
+    - '[msg] %prefix%&cYou''ve already received this reward!'
+  Reward-NoPermissions:
+    - '[sound] sound=ENTITY_ENDERMAN_TELEPORT pitch=0 yaw=1'
+    - '[msg] %prefix%&cYou don''t have permission to receive this reward!'
+  Levels:
+    #等级名
+    Global:
+      Reset:
+        - '[msg] %prefix%&cYour level has been reset!'
+      Player-Received-Exps:
+        - '[msg] &b+ %exps% Exps'
+      Player-Set-Exps:
+        - '[msg] %prefix%&aYour experiences has been set to: %exps%'
+      Player-Removed-Exps:
+        - '[msg] &c- %exps% Exps'
+      Player-Added-Levels:
+        - 'LEVEL_UP'
+      Player-Set-Levels:
+        - '[msg] %prefix%&aYour levels has been set to: %levels%'
+      Player-Removed-Levels:
+        - '[msg] &c- %levels% Levels'
+      Player-Set-Multiple:
+        - '[msg] %prefix%&aYour multiple has been set to: %multiple%'
+      Level-Up-Events:
+        #Default
+        default:
+          - '[title] title=&b&lLEVEL UP subtitle=&aCurrent levels: %shadowlevels_global_level% fadeIn=10 stay=30 fadeOut=10'
+        #Level up to 1
+        1:
+          - '[title] title=&b&lLEVEL UP subtitle=&aCurrent levels: 1 fadeIn=10 stay=30 fadeOut=10'
+        100:
+          - '[title] title=&b&lLEVEL UP subtitle=&cYou have reached the full level! fadeIn=10 stay=30 fadeOut=10'
+          - '[bc] %prefix%&6%player_name% has reached the full level'
+#      You can also write like this:
+#      Level-Up-Events:
+#        - '[title] title=&b&lLevel UP subtitle=&aCurrent levels: %shadowlevels_global_level% fadeIn=10 stay=30 fadeOut=10'

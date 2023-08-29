@@ -1,0 +1,10 @@
+Level-System:
+  ==: ShadowLevels-Level
+  Colors:
+    0: '&7'
+    10: '&f'
+  Max-levels: 100
+  Default-exps-to-level-up: 5000
+  Name: $name$
+  Custom-exps-to-level-up:
+    1: 100

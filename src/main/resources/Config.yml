@@ -1,0 +1,64 @@
+#插件前缀显示
+Prefix: '&7&lS&b&lL &8» '
+#是否开启十六进制颜色
+Enable-Hex-Color: true
+Debug-Mode: false
+#更新检查
+Update-Check: false
+#语言
+Locale:
+  #默认语言 语言有zh_CN en_US zh_TW
+  Default: zh_CN
+  #语言本地保存位置 你可以将多个服务器的ShadowLevels语言文件保存至一个位置
+  File: '%default%/Locale'
+  #是否开启默认语言
+  Use-Default-Locale: false
+Data:
+  #数据存储支持: YAML, Json, SQLite, MySQL
+  Storage-Method: 'Yaml'
+  #玩家信息保存位置 你可以将多个服务器的ShadowLevels玩家信息保存至一个位置
+  Non-DB-Storage-File: '%default%/PlayerData'
+  #重载时保存
+  Save-When-Reloading: true
+  #数据库
+  MySQL:
+    Username: 'username'
+    Password: 'password'
+    DataBase: 'database'
+    Host: 'localhost'
+    Port: 3306
+    Table: 'shadowlevels_data'
+    UseSSL: false
+  SQLite:
+    Table: 'shadowlevels_data'
+    #SQLite数据库文件保存位置
+    File: '%default%/PlayerData.db'
+  #如果玩家数据无法载入, 将如何处理?
+  #KICK => 踢出玩家
+  #NOTICE => 提醒玩家
+  Failed-to-Load-Action: KICK
+  #Bungee跨服同步模式
+  #请参照教程安装ShadowMessenger及其扩展!
+  Bungee-Mode: false
+#进度条显示 则变量%shadowlevels_<等级系统名>_progressbar%显示的内容
+Progress-Bar:
+  #已获取进度
+  Filled: '&b■'
+  #未获取进度
+  Blank: '&7■'
+  #默认进度条长度
+  Default-Length: 10
+#等级系统
+Levels:
+  #等级系统保存位置 你可以将多个服务器的ShadowLevels等级系统保存至一个位置
+  File: '%default%/Levels'
+  #启用的等级系统 如果新创建了等级系统 请务必在此启用
+  Enabled:
+    - 'Global'
+Rewards:
+  #等级奖励保存位置 你可以将多个服务器的ShadowLevels等级奖励保存至一个位置
+  File: '%default%/Rewards'
+  #启用的等级奖励 如果新创建了等级奖励 请务必在此启用
+  Enabled:
+    - 'Global'
+Experience-Bar-Level-System: Global

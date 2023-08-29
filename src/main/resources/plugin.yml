@@ -1,0 +1,37 @@
+name: ShadowLevels
+version: '${version}'
+main: top.shadowpixel.shadowlevels.ShadowLevels
+api-version: 1.13
+depend: [ ShadowCore ]
+softdepend: [ PlaceholderAPI, ShadowMessenger, ItemsAdder, LangSwitcher ]
+authors: [ XiaoJin_awa_ ]
+description: A level plugin
+commands:
+  ShadowLevels:
+    description: Main command of ShadowLevels
+    aliases: [ sl ]
+permissions:
+  ShadowLevels.Commands.Admin:
+    default: op
+  ShadowLevels.Commands.Reload:
+    default: op
+  ShadowLevels.Commands.AddLevels:
+    default: op
+  ShadowLevels.Commands.SetLevels:
+    default: op
+  ShadowLevels.Commands.RemoveLevels:
+    default: op
+  ShadowLevels.Commands.AddExps:
+    default: op
+  ShadowLevels.Commands.SetExps:
+    default: op
+  ShadowLevels.Commands.RemoveExps:
+    default: op
+  ShadowLevels.Commands.SetMultiple:
+    default: op
+  ShadowLevels.Commands.Reset:
+    default: op
+  ShadowLevels.Commands.Stats.Others:
+    default: op
+  ShadowLevels.Commands.StatsOffline:
+    default: op
