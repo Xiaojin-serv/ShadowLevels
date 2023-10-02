@@ -1,6 +1,4 @@
-# ShadowLevels  
-
-![headline](images/1.png)  
+ ![headline](images/1.png)  
 [![title2](images/2.png)](https://www.mcbbs.net/forum.php?mod=viewthread&tid=1394545)
 ![title3](images/3.png)  
 [![title4](images/4.png)](https://www.mcbbs.net/forum.php?mod=viewthread&tid=1441983&page=1&extra=#pid28369281)  

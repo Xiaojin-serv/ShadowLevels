@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 public class PlayerData implements ConfigurationSerializable {
 
-    private UUID                   owner;
+    private UUID owner;
     private Map<String, LevelData> levelDatas = new HashMap<>();
 
     public PlayerData(UUID owner) {
@@ -37,8 +37,9 @@ public class PlayerData implements ConfigurationSerializable {
     }
 
     public void setOwner(UUID owner) {
-        if (this.owner == null)
+        if (this.owner == null) {
             this.owner = owner;
+        }
     }
 
     @Nullable

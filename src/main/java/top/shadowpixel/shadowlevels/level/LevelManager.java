@@ -27,12 +27,12 @@ import java.util.Objects;
 @ToString
 public class LevelManager implements Manager {
 
-    private final ShadowLevels           plugin;
+    private final ShadowLevels plugin;
     @Getter
     private final HashMap<String, Level> loadedLevels = new HashMap<>();
     @Getter
-    private       File                   file;
-    private       BukkitTask             experienceBarTask;
+    private File file;
+    private BukkitTask experienceBarTask;
 
     public LevelManager(ShadowLevels plugin) {
         this.plugin = plugin;

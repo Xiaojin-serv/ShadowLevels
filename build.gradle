@@ -28,13 +28,12 @@ repositories {
 
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
-    compileOnly 'top.shadowpixel:ShadowCore-spigot:1.2.8'
+    compileOnly 'top.shadowpixel:ShadowCore-spigot:1.3.0'
     compileOnly 'org.jetbrains:annotations:24.0.1'
     compileOnly 'me.clip:placeholderapi:2.11.3'
     compileOnly 'top.shadowpixel.shadowmessenger:ShadowMessenger-spigot:1.0'
     compileOnly 'top.shadowpixel:langswitcher:1.0'
     compileOnly 'com.github.LoneDev6:api-itemsadder:3.4.1e'
-    compileOnly 'org.projectlombok:lombok:1.18.28'
 
     //Lombok
     compileOnly "org.projectlombok:lombok:1.18.28"
@@ -45,14 +44,6 @@ group = 'top.shadowpixel'
 version = '1.4.0'
 description = 'ShadowLevels'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
-}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
@@ -67,6 +58,9 @@ processResources {
     }
 }
 
+tasks.withType(Jar).configureEach {
+    destinationDirectory.set(file("E:\\服务器\\测试服务器\\Paper - 1.8.8\\plugins"))
+}
 
 tasks.withType(Javadoc).configureEach {
     options.encoding = 'UTF-8'

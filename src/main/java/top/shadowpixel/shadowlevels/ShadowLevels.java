@@ -51,30 +51,29 @@ import java.util.UUID;
 
 @SuppressWarnings("LombokGetterMayBeUsed")
 public final class ShadowLevels extends AbstractPlugin {
-
     public static final Manager.Property
             CONFIG_MANAGER = Manager.Property.of(ConfigManager.class, "configManager"),
             LOCALE_MANAGER = Manager.Property.of(LocaleManager.class, "localeManager"),
-            LEVEL_MANAGER  = Manager.Property.of(LevelManager.class, "levelManager"),
-            DATA_MANAGER   = Manager.Property.of(DataManager.class, "dataManager"),
+            LEVEL_MANAGER = Manager.Property.of(LevelManager.class, "levelManager"),
+            DATA_MANAGER = Manager.Property.of(DataManager.class, "dataManager"),
             REWARD_MANAGER = Manager.Property.of(RewardManager.class, "rewardManager"),
             BUNGEE_MANAGER = Manager.Property.of(BungeeManager.class, "bungeeManager");
 
-    private static ShadowLevels  instance;
-    private static File          CONFIG_FILE;
+    private static ShadowLevels instance;
+    private static File CONFIG_FILE;
     @Getter
-    private        ConfigManager configManager;
+    private ConfigManager configManager;
     @Getter
-    private        LocaleManager localeManager;
+    private LocaleManager localeManager;
     @Getter
-    private        LevelManager  levelManager;
+    private LevelManager levelManager;
     @Getter
-    private        DataManager   dataManager;
+    private DataManager dataManager;
     @Getter
-    private        RewardManager rewardManager;
+    private RewardManager rewardManager;
     @Getter
-    private        BungeeManager bungeeManager;
-    private        boolean       isEnabled = false;
+    private BungeeManager bungeeManager;
+    private boolean isEnabled = false;
 
     @NotNull
     public static PlayerData getPlayerData(@NotNull Player player) {

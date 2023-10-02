@@ -65,7 +65,6 @@ public class CommandUtils {
     }
 
     public static void sendCommandMessage(CommandSender sender, String path, String... replacements) {
-        SenderUtils.sendMessage(sender,
-                LocaleUtils.getCmdMessage(sender, path, replacements));
+        LocaleUtils.sendCmdMessage(sender, path, replacements);
     }
 }

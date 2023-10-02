@@ -39,15 +39,15 @@ public class DataManager implements Manager {
             new SQLDataModifier()
     );
 
-    private final ShadowLevels              plugin;
+    private final ShadowLevels plugin;
     private final HashMap<UUID, PlayerData> loadedData = new HashMap<>();
 
     protected DataModifier<PlayerData> dataModifier;
     @Getter
-    private   StorageMethod            storageMethod;
+    private StorageMethod storageMethod;
     @Getter
-    private   File                     storageFile;
-    private   SQLDatabase              db;
+    private File storageFile;
+    private SQLDatabase db;
 
     public DataManager(ShadowLevels plugin) {
         this.plugin = plugin;

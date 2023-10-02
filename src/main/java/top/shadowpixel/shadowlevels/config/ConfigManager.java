@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ConfigManager extends AbstractConfigManager<ShadowLevels> {
 
-    private List<ConfigurationInfo> INFOS = ListUtils.immutableList(
+    private final List<ConfigurationInfo> INFOS = ListUtils.immutableList(
             ConfigurationInfo.of(plugin, "Config", "Config.yml"),
             ConfigurationInfo.of(plugin, "Items", "Items.yml")
     );

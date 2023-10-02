@@ -1,6 +1,7 @@
 package top.shadowpixel.shadowlevels.data;
 
 import lombok.var;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +13,9 @@ import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 import top.shadowpixel.shadowlevels.util.LocaleUtils;
 import top.shadowpixel.shadowmessenger.ShadowMessenger;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 
 /**
@@ -35,7 +39,7 @@ public class DataHandler {
                 result -> {
                     if (result.getReturnValue().equalsIgnoreCase("ok")) {
                         if (sender != null) {
-                            SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success." + type.getName() + "-Levels"),
+                            LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Levels",
                                     "%level-system%", level,
                                     "%amount%", String.valueOf(amount),
                                     "%player%", name);
@@ -62,10 +66,10 @@ public class DataHandler {
                 result -> {
                     if (result.getReturnValue().equalsIgnoreCase("OK")) {
                         if (sender != null) {
-                            SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success." + type.getName() + "-Exps",
+                            LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Exps",
                                     "%level-system%", level,
                                     "%amount%", String.valueOf(amount),
-                                    "%player%", name));
+                                    "%player%", name);
                             showMessage(sender, "through-bungee");
                         }
                     } else {
@@ -89,10 +93,10 @@ public class DataHandler {
                 result -> {
                     if (result.getReturnValue().equalsIgnoreCase("OK")) {
                         if (sender != null) {
-                            SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success.Set-Multiple",
+                            LocaleUtils.sendCmdMessage(sender, "Success.Set-Multiple",
                                     "%level-system%", level,
                                     "%multiple%", String.valueOf(amount),
-                                    "%player%", name));
+                                    "%player%", name);
                         }
                     } else {
                         OfflineHandler.modifyMultipleOffline(sender, name, level, amount);
@@ -153,9 +157,9 @@ public class DataHandler {
         private static void resetOffline(@Nullable CommandSender sender, String name, String level) {
             var modified = level.equals("*") ? resetAllOffline(sender, name) : handleLevelOffline(sender, name, level, LevelData::resetSilently);
             if (sender != null && modified) {
-                SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success.Reset",
+                LocaleUtils.sendCmdMessage(sender, "Success.Reset",
                         "%level-system%", level,
-                        "%player%", name));
+                        "%player%", name);
                 showMessage(sender, "offline");
             }
         }
@@ -182,7 +186,7 @@ public class DataHandler {
 
             if (!modified) return;
             if (sender != null) {
-                SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success." + type.getName() + "-Levels"),
+                LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Levels",
                         "%level-system%", level,
                         "%amount%", String.valueOf(amount),
                         "%player%", name);
@@ -206,10 +210,10 @@ public class DataHandler {
 
             if (!modified) return;
             if (sender != null) {
-                SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success." + type.getName() + "-Exps",
+                LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Exps",
                         "%level-system%", level,
                         "%amount%", String.valueOf(amount),
-                        "%player%", name));
+                        "%player%", name);
                 showMessage(sender, "offline");
             }
         }
@@ -217,10 +221,10 @@ public class DataHandler {
         private static void modifyMultipleOffline(@Nullable CommandSender sender, String name, String level, float amount) {
             var modified = handleLevelOffline(sender, name, level, data -> data.setMultipleSilently(amount));
             if (sender != null && modified) {
-                SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success.Set-Multiple",
+                LocaleUtils.sendCmdMessage(sender, "Success.Set-Multiple",
                         "%level-system%", level,
                         "%multiple%", String.valueOf(amount),
-                        "%player%", name));
+                        "%player%", name);
                 showMessage(sender, "offline");
             }
         }

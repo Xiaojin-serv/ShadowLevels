@@ -36,7 +36,7 @@ public class Level implements ConfigurationSerializable {
      * @return Name of the level;
      */
     @Getter
-    private String  name;
+    private final String  name;
     private Integer maxLevels, requiredExps;
     private HashMap<Integer, Integer>      expsToLevel;
     private LinkedHashMap<Integer, String> colors;

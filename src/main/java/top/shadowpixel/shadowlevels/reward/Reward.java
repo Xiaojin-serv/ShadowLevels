@@ -29,8 +29,12 @@ public class Reward {
     private final String name;
 
     @Getter
-    private int level, page, slot;
-    private RewardList parent;
+    private final int level;
+    @Getter
+    private final int page;
+    @Getter
+    private final int slot;
+    private final RewardList parent;
 
     public Reward(@NotNull RewardList parent, @NotNull Configuration section) {
         //Init

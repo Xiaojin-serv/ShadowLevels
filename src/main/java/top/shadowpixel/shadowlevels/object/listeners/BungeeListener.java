@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class BungeeListener implements PluginMessageListener {
 
-    private ShadowLevels plugin;
+    private final ShadowLevels plugin;
 
     public BungeeListener() {
         this.plugin = ShadowLevels.getInstance();

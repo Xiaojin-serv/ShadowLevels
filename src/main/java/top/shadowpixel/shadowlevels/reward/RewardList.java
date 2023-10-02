@@ -22,9 +22,9 @@ public class RewardList {
     @Getter
     private String  name;
     @Getter
-    private String  title;
+    private final String  title;
     @Getter
-    private Integer size;
+    private final Integer size;
 
     public RewardList(Configuration section) {
         this(section, null);
