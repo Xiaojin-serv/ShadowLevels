@@ -30,11 +30,6 @@ public class Level implements ConfigurationSerializable {
 
     private final HashMap<String, Map<String, ExecutableEvent>> events = new HashMap<>();
 
-    /**
-     * -- GETTER --
-     *
-     * @return Name of the level;
-     */
     @Getter
     private final String  name;
     private Integer maxLevels, requiredExps;

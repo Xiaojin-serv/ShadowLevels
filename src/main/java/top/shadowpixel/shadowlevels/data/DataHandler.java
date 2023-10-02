@@ -1,7 +1,6 @@
 package top.shadowpixel.shadowlevels.data;
 
 import lombok.var;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,9 +12,6 @@ import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 import top.shadowpixel.shadowlevels.util.LocaleUtils;
 import top.shadowpixel.shadowmessenger.ShadowMessenger;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.FutureTask;
 import java.util.function.Consumer;
 
 /**
@@ -165,9 +161,7 @@ public class DataHandler {
         }
 
         private static boolean resetAllOffline(@Nullable CommandSender sender, String name) {
-            return handleDataOffline(sender, name, data -> {
-                data.getLevels().values().forEach(LevelData::resetSilently);
-            });
+            return handleDataOffline(sender, name, data -> data.getLevels().values().forEach(LevelData::resetSilently));
         }
 
         private static void modifyLevelsOffline(@Nullable CommandSender sender, String name, String level, ModificationType type, int amount) {
@@ -234,7 +228,7 @@ public class DataHandler {
         }
 
         private static boolean handleDataOffline(@Nullable CommandSender sender, String name, @NotNull Consumer<PlayerData> consumer) {
-            var uuid = UUIDStorage.getUUID(name);
+            var uuid = UUIDStorage.getUniqueID(name);
             if (uuid == null) {
                 showMessage(sender, "player-not-found", "%name%", name);
                 return false;

@@ -284,7 +284,7 @@ public class DataManager implements Manager {
      * @param uuid Player uuid
      * @return Player data
      */
-    @NotNull
+    @Nullable
     public PlayerData getPlayerData(@NotNull UUID uuid) {
         return this.loadedData.get(uuid);
     }
@@ -297,13 +297,13 @@ public class DataManager implements Manager {
      */
     @NotNull
     public PlayerData getPlayerData(@NotNull Player player) {
-        return getPlayerData(player.getUniqueId());
+        return Objects.requireNonNull(getPlayerData(player.getUniqueId()), "null player data");
     }
 
     @Nullable
     public PlayerData getOfflineData(@NotNull String playerName) {
         //Fetch UUID
-        return Optional.of(UUIDStorage.getUUID(playerName))
+        return Optional.of(UUIDStorage.getUniqueID(playerName))
                 //Load data
                 .next(s -> getDataModifier().load(s))
                 //Complete and return

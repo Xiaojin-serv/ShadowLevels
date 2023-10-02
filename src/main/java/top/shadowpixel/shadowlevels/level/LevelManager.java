@@ -164,7 +164,7 @@ public class LevelManager implements Manager {
             Files.write(file.toPath(), lines);
 
             //Add to config
-            ConfigurationUtils.add(this.plugin.getConfiguration("Config"), "Levels.Enabled", name);
+            ConfigurationUtils.add(this.plugin.getConfiguration(), "Levels.Enabled", name);
             //noinspection DataFlowIssue
             ConfigurationProvider.getProvider("Yaml")
                     .save(plugin.getConfiguration("Config"), ShadowLevels.getConfigFile());
@@ -190,11 +190,13 @@ public class LevelManager implements Manager {
         }
 
         var defaultLevel = getLevelSystem(config.getString("Experience-Bar-Level-System"));
-        LevelData data;
-        if (defaultLevel != null && (data = defaultLevel.getLevelData(player)) != null) {
-            player.setLevel(data.getLevels());
-            player.setExp(Math.min(data.getPercentage() / 100F, 0.99F));
+        if (defaultLevel == null) {
+            return;
         }
+
+        LevelData data = defaultLevel.getLevelData(player);
+        player.setLevel(data.getLevels());
+        player.setExp(Math.min(data.getPercentage() / 100F, 0.99F));
     }
 
     public void resetAll(@NotNull Player player) {
