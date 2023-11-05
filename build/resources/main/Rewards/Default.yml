@@ -1,0 +1,117 @@
+Rewards-List:
+  Level-System: $name$
+  Title: Rewards
+  Size: 54
+  Rewards:
+    1:
+      Level: 1
+      Page: 1
+      Slot: 10
+      Rewards:
+        - '&6Coins x100'
+      Events:
+        - '@EventProperty world'
+        - '[CONSOLE_COMMAND] bal give %player% 100'
+    2:
+      Level: 2
+      Page: 1
+      Slot: 11
+      Rewards:
+        - '&6Coins x100'
+      Events:
+        - '@EventProperty world'
+        - '[CONSOLE_COMMAND] bal give %player% 100'
+    3:
+      Level: 3
+      Page: 2
+      Slot: 10
+      Rewards:
+        - '&6Coins x100'
+      Events:
+        - '@EventProperty world'
+        - '[CONSOLE_COMMAND] bal give %player% 100'
+      Custom-Items:
+        Reward-Unlocked:
+          Name: '&eReward 3 &f| &aUnlocked'
+          Lore:
+            - ''
+            - '&6Rewards:'
+            - '%rewards%'
+            - ''
+            - '&aClick to claim!'
+          Material: CHEST_MINECART
+          Amount: 1
+          Data: 0
+          ItemFlags: HIDE_ENCHANTS
+          Enchantments: 'PROTECTION_ENVIRONMENTAL : 1'
+          Events:
+            - '[msg] &aReceived successfully'
+        Reward-Locked:
+          Name: '&eReward 3 &f| &cLocked'
+          Lore:
+            - ''
+            - '&6Rewards:'
+            - '%rewards%'
+            - ''
+            - '&cYou need more levels!'
+          Material: CHEST_MINECART
+          Amount: 1
+          Data: 0
+          Events:
+            - '[msg] &cThis reward is locked!'
+        Reward-Received:
+          Name: '&eReward 3 &f| &cReceived'
+          Lore:
+            - ''
+            - '&6Rewards:'
+            - '%rewards%'
+            - ''
+            - '&cYou''ve already received!'
+          Material: MINECART
+          Amount: 1
+          Data: 0
+          Events:
+            - '[msg] &cYou''ve already received this reward!'
+        Reward-NoPermissions:
+          Name: '&eReward 3 &f| &cLocked'
+          Lore:
+            - ''
+            - '&6Rewards:'
+            - '%rewards%'
+            - ''
+            - '&cYou don''t have permissions!'
+          Material: CHEST_MINECART
+          Amount: 1
+          Data: 0
+          Events:
+            - '[msg] &cYou don''t have permissions to receive this reward!'
+  Item-Slots:
+    Previous-Page: [ 9, 18, 27, 36 ]
+    Next-Page: [ 17, 26, 35, 44 ]
+    Custom-Border: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 45, 46, 47, 48, 49, 50, 51, 52, 53 ]
+  Custom-Items:
+    Custom-Border:
+      Name: '&7Border'
+      Material: GRAY_STAINED_GLASS_PANE
+#    Previous-Page:
+#      Name: '&cPrevious page'
+#      Lore:
+#        - '&7Click to go to the previous page'
+#      Material: RED_STAINED_GLASS_PANE
+#      Amount: 1
+#      Data: 0
+#    Next-Page:
+#      Name: '&aNext page'
+#      Lore:
+#        - '&7Click to go to the next page'
+#      Material: GREEN_STAINED_GLASS_PANE
+#      Amount: 1
+#      Data: 0
+#    Reward-Unlocked:
+#      ...
+#    Reward-Locked:
+#      ...
+#    Reward-Received:
+#      ...
+#    Reward-NoPermissions:
+#      ...

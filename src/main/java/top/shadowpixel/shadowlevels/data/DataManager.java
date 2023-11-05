@@ -181,11 +181,7 @@ public class DataManager implements Manager {
     public boolean unload(UUID uuid, boolean save) {
         if (save) {
             var data = getPlayerData(uuid);
-            if (data == null) {
-                return false;
-            } else {
-                save(data);
-            }
+            save(data);
         }
 
         return this.loadedData.remove(uuid) != null;
@@ -254,11 +250,8 @@ public class DataManager implements Manager {
      */
     public boolean save(UUID uuid) {
         var data = getPlayerData(uuid);
-        if (data != null) {
-            return save(data);
-        }
+        return save(data);
 
-        return false;
     }
 
     /**
@@ -284,7 +277,7 @@ public class DataManager implements Manager {
      * @param uuid Player uuid
      * @return Player data
      */
-    @Nullable
+    @NotNull
     public PlayerData getPlayerData(@NotNull UUID uuid) {
         return this.loadedData.get(uuid);
     }

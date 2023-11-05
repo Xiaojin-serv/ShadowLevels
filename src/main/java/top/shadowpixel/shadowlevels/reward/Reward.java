@@ -61,13 +61,14 @@ public class Reward {
         }
     }
 
+    @SuppressWarnings ("unused")
     @NotNull
     public List<String> getRewardLore() {
         return rewards;
     }
 
     @NotNull
-    public ItemStack getNoPermissionsItem() {
+    public ItemStack getNonPermissionsItem() {
         return getItem(RewardStatus.NO_PERMISSIONS);
     }
 

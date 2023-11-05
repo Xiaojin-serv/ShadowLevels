@@ -124,7 +124,7 @@ public class RewardMenu extends PlayerMenu {
                         EventExecutor.execute(ShadowLevels.getInstance(), player, reward.getReceivedEvent(player)));
                 break;
             case 4:
-                item = MenuItem.of(reward.getNoPermissionsItem());
+                item = MenuItem.of(reward.getNonPermissionsItem());
                 item.addClickAction((menu, event) ->
                         EventExecutor.execute(ShadowLevels.getInstance(), player, reward.getNoPermEvent(player)));
                 break;
@@ -202,6 +202,7 @@ public class RewardMenu extends PlayerMenu {
     }
 
     private MenuItem getItem(String path) {
+        //noinspection DataFlowIssue
         return MenuItem.of(ItemUtils.builder(player,
                 rewardList.getConfiguration().contains("Custom-Items." + path) ?
                 rewardList.getConfiguration().getConfigurationSection("Custom-Items." + path) :

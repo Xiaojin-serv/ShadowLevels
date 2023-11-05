@@ -1,0 +1,42 @@
+Events:
+  Reward-Locked:
+    - '[sound] sound=ENTITY_ENDERMAN_TELEPORT pitch=0 yaw=1'
+    - '[msg] %prefix%&c你还需要更高的等级才能领取这个奖励!'
+  Reward-Received:
+    - '[sound] sound=ENTITY_ENDERMAN_TELEPORT pitch=0 yaw=1'
+    - '[msg] %prefix%&c你已经领取过这个奖励了!'
+  Reward-NoPermissions:
+    - '[sound] sound=ENTITY_ENDERMAN_TELEPORT pitch=0 yaw=1'
+    - '[msg] %prefix%&c你没有领取这个奖励的权限!'
+  Levels:
+    #等级名
+    Global:
+      Reset:
+        - '[msg] %prefix%&c您的等级信息已被重置!'
+      Player-Received-Exps:
+        - '[msg] &b+ %exps% Exps'
+      Player-Set-Exps:
+        - '[msg] %prefix%&a您的经验被设置为: %exps%'
+      Player-Removed-Exps:
+        - '[msg] &c- %exps% Exps'
+      Player-Added-Levels:
+        - 'LEVEL_UP'
+      Player-Set-Levels:
+        - '[msg] %prefix%&a您的等级被设置为: %levels%'
+      Player-Removed-Levels:
+        - '[msg] &c- %levels% Levels'
+      Player-Set-Multiple:
+        - '[msg] %prefix%&a您的经验倍率设置为: %multiple%'
+      Level-Up-Events:
+        #默认
+        default:
+          - '[title] title=&b&l等级提升 subtitle=&a当前等级: %shadowlevels_global_level% fadeIn=10 stay=30 fadeOut=10'
+        #升到一级
+        1:
+          - '[title] title=&b&l等级提升 subtitle=&a当前等级: 1 fadeIn=10 stay=30 fadeOut=10'
+        100:
+          - '[title] title=&b&l等级提升 subtitle=&c你到达了最高等级! fadeIn=10 stay=30 fadeOut=10'
+          - '[bc] %prefix%&6%player_name%到达了最高等级!'
+#      直接这么写也行
+#      Level-Up-Events:
+#        - '[title] title=&b&lLevel UP subtitle=&aCurrent levels: %shadowlevels_global_level% fadeIn=10 stay=30 fadeOut=10'

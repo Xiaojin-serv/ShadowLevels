@@ -29,10 +29,6 @@ public class JsonDataModifier extends AbstractDataModifier {
         }
 
         var data = load(config);
-        if (data == null) {
-            return null;
-        }
-
         data.setOwner(uuid);
         return data;
     }
