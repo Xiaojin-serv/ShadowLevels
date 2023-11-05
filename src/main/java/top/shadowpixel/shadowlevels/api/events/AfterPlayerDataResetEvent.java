@@ -8,12 +8,12 @@ import top.shadowpixel.shadowlevels.level.Level;
 
 @Getter
 public class AfterPlayerDataResetEvent extends AbstractPlayerEvent {
-
     private static final HandlerList handlerList = new HandlerList();
+
     @Getter
     private final Level levelSystem;
 
-    public AfterPlayerDataResetEvent(@NotNull Player who, Level levelSystem) {
+    public AfterPlayerDataResetEvent(@NotNull Player who, @NotNull Level levelSystem) {
         super(who);
         this.levelSystem = levelSystem;
     }

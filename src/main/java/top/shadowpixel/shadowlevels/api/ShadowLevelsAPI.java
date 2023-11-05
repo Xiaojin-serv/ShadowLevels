@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class ShadowLevelsAPI {
 
     @Getter
@@ -69,7 +70,7 @@ public class ShadowLevelsAPI {
      * @param rewardList Reward list
      * @return Player's reward menu of this reward list
      */
-    @Nullable
+    @NotNull
     public static RewardMenu getRewardMenu(Player player, RewardList rewardList) {
         return getRewardManager().getRewardMenu(player, rewardList);
     }

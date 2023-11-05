@@ -12,14 +12,14 @@ import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 public class PlayerMultipleModifyEvent extends AbstractPlayerEvent implements Cancellable {
 
     private static final HandlerList handlerList = new HandlerList();
-    private final        Level       levelSystem;
+    private final Level levelSystem;
     @Getter
-    private final        Float       oldValue, value;
+    private final Float oldValue, value;
     @Getter
     private final ModificationType modificationType = ModificationType.SET;
-    private       Boolean          cancel           = false;
+    private Boolean cancel = false;
 
-    public PlayerMultipleModifyEvent(@NotNull Player who, Level levelSystem, Float oldValue, Float value) {
+    public PlayerMultipleModifyEvent(@NotNull Player who, @NotNull Level levelSystem, float oldValue, float value) {
         super(who);
         this.levelSystem = levelSystem;
         this.oldValue = oldValue;

@@ -184,7 +184,7 @@ public class DataManager implements Manager {
             if (data == null) {
                 return false;
             } else {
-                return save(data);
+                save(data);
             }
         }
 
@@ -398,7 +398,7 @@ public class DataManager implements Manager {
         LevelManager.getInstance().getLoadedLevels().values().forEach(level -> {
             var name = level.getName();
             if (!levels.containsKey(name) || levels.get(name) == null) {
-                levels.put(name, new LevelData());
+                levels.put(name, new LevelData(null, level));
             }
         });
 

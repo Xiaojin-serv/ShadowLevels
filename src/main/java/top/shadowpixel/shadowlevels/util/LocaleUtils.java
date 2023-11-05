@@ -25,7 +25,7 @@ public class LocaleUtils {
     }
 
     public static String getMessage(@NotNull String path, String... replacements) {
-        return ReplaceUtils.coloredReplace(getInstance().getDefaultMessage().getString(path), replacements);
+        return ReplaceUtils.coloredReplace(getInstance().getDefaultMessage().getString(path).replaceAll("\\{prefix}|%prefix%", ShadowLevels.getPrefix()), replacements);
     }
 
     public static String getMessage(@NotNull CommandSender sender, @NotNull String path, String... replacements) {

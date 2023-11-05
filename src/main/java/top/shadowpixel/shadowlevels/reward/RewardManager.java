@@ -3,6 +3,7 @@ package top.shadowpixel.shadowlevels.reward;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.var;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -26,16 +27,15 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
+@SuppressWarnings ("unused")
 @ToString
 public class RewardManager implements Manager {
-
-    public static Map<String, ItemStack>                          defaultItems;
+    public static Map<String, ItemStack> defaultItems;
     public static Map<String, Map<RewardStatus, ExecutableEvent>> defaultEvents;
 
-    private final ShadowLevels                                 plugin;
-    private final HashMap<String, RewardList>                  loadedRewards = new HashMap<>();
-    private final HashMap<Player, HashMap<String, RewardMenu>> rewardMenus   = new HashMap<>();
+    private final ShadowLevels plugin;
+    private final HashMap<String, RewardList> loadedRewards = new HashMap<>();
+    private final HashMap<Player, HashMap<String, RewardMenu>> rewardMenus = new HashMap<>();
 
     @Getter
     private File file;
@@ -44,14 +44,9 @@ public class RewardManager implements Manager {
         this.plugin = plugin;
     }
 
-    public static RewardManager getInstance() {
-        return ShadowLevels.getInstance().getRewardManager();
-    }
-
     @Override
     public void initialize() {
-        this.file = new File(plugin.getConfiguration().getString("Rewards.File", "%default%/Rewards")
-                .replace("%default%", String.valueOf(plugin.getDataFolder())));
+        this.file = new File(plugin.getConfiguration().getString("Rewards.File", "%default%/Rewards").replace("%default%", String.valueOf(plugin.getDataFolder())));
         //noinspection ResultOfMethodCallIgnored
         this.file.mkdirs();
 
@@ -74,14 +69,16 @@ public class RewardManager implements Manager {
         return MapUtils.smartMatch(name, loadedRewards);
     }
 
-    @Nullable
+    @NotNull
     public RewardMenu getRewardMenu(@NotNull Player player, @NotNull RewardList rewardList) {
         if (!rewardMenus.containsKey(player)) {
             this.rewardMenus.put(player, new HashMap<>());
         }
 
         if (!this.rewardMenus.get(player).containsKey(rewardList.getName())) {
-            this.rewardMenus.get(player).put(rewardList.getName(), RewardMenu.createMenu(player, rewardList));
+            var menu = RewardMenu.createMenu(player, rewardList);
+            this.rewardMenus.get(player).put(rewardList.getName(), menu);
+            return menu;
         }
 
         return rewardMenus.get(player).get(rewardList.getName());
@@ -118,9 +115,7 @@ public class RewardManager implements Manager {
     }
 
     public ArrayList<RewardList> getRewardLists(@NotNull Level level) {
-        return (ArrayList<RewardList>) loadedRewards.values().stream()
-                .filter(r -> r.getLevel().equals(level))
-                .collect(Collectors.toList());
+        return (ArrayList<RewardList>) loadedRewards.values().stream().filter(r -> r.getLevel().equals(level)).collect(Collectors.toList());
     }
 
     @Deprecated
@@ -132,17 +127,14 @@ public class RewardManager implements Manager {
         return Collections.unmodifiableMap(this.loadedRewards);
     }
 
-    @SuppressWarnings("DataFlowIssue")
+    @SuppressWarnings ("DataFlowIssue")
     public void loadDefaultEvents() {
         var events = new HashMap<String, Map<RewardStatus, ExecutableEvent>>();
         plugin.getLocaleManager().getLocales().forEach((name, locale) -> {
             var map = new EnumMap<RewardStatus, ExecutableEvent>(RewardStatus.class);
-            map.put(RewardStatus.LOCKED,
-                    ExecutableEvent.of(locale.getConfig("Events").getStringList("Events.Reward-Locked")));
-            map.put(RewardStatus.RECEIVED,
-                    ExecutableEvent.of(locale.getConfig("Events").getStringList("Events.Reward-Received")));
-            map.put(RewardStatus.NO_PERMISSIONS,
-                    ExecutableEvent.of(locale.getConfig("Events").getStringList("Events.Reward-NoPermissions")));
+            map.put(RewardStatus.LOCKED, ExecutableEvent.of(locale.getConfig("Events").getStringList("Events.Reward-Locked")));
+            map.put(RewardStatus.RECEIVED, ExecutableEvent.of(locale.getConfig("Events").getStringList("Events.Reward-Received")));
+            map.put(RewardStatus.NO_PERMISSIONS, ExecutableEvent.of(locale.getConfig("Events").getStringList("Events.Reward-NoPermissions")));
 
             events.put(name, Collections.unmodifiableMap(map));
             map.values().forEach(e -> e.replacePermanently("%prefix%", ShadowLevels.getPrefix()));
@@ -152,13 +144,11 @@ public class RewardManager implements Manager {
 
     public void loadDefaultItems() {
         var map = new HashMap<String, ItemStack>();
-        var items = Optional.of(plugin.getConfiguration("Items"))
-                .ret(s -> s.getConfigurationSection("Items"));
+        var items = Optional.of(plugin.getConfiguration("Items")).ret(s -> s.getConfigurationSection("Items"));
 
         //Load items
         assert items != null;
-        items.getKeys().forEach(item ->
-                map.put(item, ItemUtils.builder().fromConfigSection(items.getConfigurationSection(item)).build()));
+        items.getKeys().forEach(item -> map.put(item, ItemUtils.builder().fromConfigSection(items.getConfigurationSection(item)).build()));
 
         defaultItems = Collections.unmodifiableMap(map);
     }
@@ -172,7 +162,7 @@ public class RewardManager implements Manager {
         return loadReward(file.getName(), file);
     }
 
-    @SuppressWarnings("DataFlowIssue")
+    @SuppressWarnings ("DataFlowIssue")
     public boolean loadReward(@NotNull String name, @NotNull File file) {
         if (!file.exists() || !plugin.getConfiguration().getStringList("Rewards.Enabled").contains(name)) {
             return false;
@@ -184,8 +174,7 @@ public class RewardManager implements Manager {
                 return false;
             }
 
-            this.loadedRewards.put(name,
-                    new RewardList(config.getConfigurationSection("Rewards-List"), name));
+            this.loadedRewards.put(name, new RewardList(config.getConfigurationSection("Rewards-List"), name));
             MLogger.infoReplaced("Messages.Rewards.Loaded", "%name%", name);
         } catch (Exception e) {
             Logger.error("An error occurred while loading a reward", e);
@@ -217,41 +206,45 @@ public class RewardManager implements Manager {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @SuppressWarnings ("ResultOfMethodCallIgnored")
     public void create(@NotNull String name, @NotNull Level level) {
         var file = new File(this.file, name + ".yml");
         if (file.exists()) {
             return;
         }
 
-        try {
-            //Read lines
-            var lines = FileUtils.readAllLines(Objects.requireNonNull(plugin.getResource("Rewards/Default.yml")),
-                    "$name$", level.getName());
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                //Read lines
+                var lines = FileUtils.readAllLines(Objects.requireNonNull(plugin.getResource("Rewards/Default.yml")), "$name$", level.getName());
 
-            //Write to local
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            Files.write(file.toPath(), lines);
+                //Write to local
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+                Files.write(file.toPath(), lines);
 
-            //Add to config
-            ConfigurationUtils.add(plugin.getConfiguration(), "Rewards.Enabled", name);
-            //noinspection DataFlowIssue
-            ConfigurationProvider.getProvider("Yaml").save(plugin.getConfiguration("Config"), ShadowLevels.getConfigFile());
+                //Add to config
+                ConfigurationUtils.add(plugin.getConfiguration(), "Rewards.Enabled", name);
+                //noinspection DataFlowIssue
+                ConfigurationProvider.getProvider("Yaml").save(plugin.getConfiguration("Config"), ShadowLevels.getConfigFile());
 
-            //noinspection DataFlowIssue
-            var reward = new RewardList(ConfigurationProvider.getProvider("Yaml").load(file)
-                    .getConfigurationSection("Rewards-List"));
-            reward.setName(name);
-            this.loadedRewards.put(name, reward);
-            MLogger.info("Messages.Rewards.Created-Successfully");
-        } catch (Exception exc) {
-            MLogger.error("Messages.Rewards.Failed-to-Create", exc);
-        }
+                //noinspection DataFlowIssue
+                var reward = new RewardList(ConfigurationProvider.getProvider("Yaml").load(file).getConfigurationSection("Rewards-List"));
+                reward.setName(name);
+                this.loadedRewards.put(name, reward);
+                MLogger.info("Messages.Rewards.Created-Successfully");
+            } catch (Exception exc) {
+                MLogger.error("Messages.Rewards.Failed-to-Create", exc);
+            }
+        });
     }
 
     @Deprecated
     public void createRewardList(String name, Level level) {
         create(name, level);
+    }
+
+    public static RewardManager getInstance() {
+        return ShadowLevels.getInstance().getRewardManager();
     }
 }

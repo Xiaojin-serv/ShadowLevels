@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import top.shadowpixel.shadowcore.api.config.Configuration;
 import top.shadowpixel.shadowcore.api.locale.Locale;
 import top.shadowpixel.shadowcore.api.plugin.AbstractPlugin;
+import top.shadowpixel.shadowcore.api.util.Metrics;
 import top.shadowpixel.shadowcore.api.util.time.MSTimer;
 import top.shadowpixel.shadowcore.object.interfaces.Manager;
 import top.shadowpixel.shadowcore.util.plugin.DescriptionChecker;
@@ -17,18 +18,6 @@ import top.shadowpixel.shadowcore.util.text.ColorUtils;
 import top.shadowpixel.shadowlevels.api.ShadowLevelsAPI;
 import top.shadowpixel.shadowlevels.bungee.BungeeManager;
 import top.shadowpixel.shadowlevels.command.*;
-import top.shadowpixel.shadowlevels.command.exps.AddExpsCommand;
-import top.shadowpixel.shadowlevels.command.exps.AddRandomExpsCommand;
-import top.shadowpixel.shadowlevels.command.exps.RemoveExpsCommand;
-import top.shadowpixel.shadowlevels.command.exps.SetExpsCommand;
-import top.shadowpixel.shadowlevels.command.level.AddLevelsCommand;
-import top.shadowpixel.shadowlevels.command.level.CreateLevelsCommand;
-import top.shadowpixel.shadowlevels.command.level.RemoveLevelsCommand;
-import top.shadowpixel.shadowlevels.command.level.SetLevelsCommand;
-import top.shadowpixel.shadowlevels.command.multiple.SetMultipleCommand;
-import top.shadowpixel.shadowlevels.command.reward.CreateRewardCommand;
-import top.shadowpixel.shadowlevels.command.reward.OpenRewardCommand;
-import top.shadowpixel.shadowlevels.command.reward.RewardCommand;
 import top.shadowpixel.shadowlevels.config.ConfigManager;
 import top.shadowpixel.shadowlevels.data.DataManager;
 import top.shadowpixel.shadowlevels.data.PlayerData;
@@ -37,7 +26,6 @@ import top.shadowpixel.shadowlevels.level.LevelData;
 import top.shadowpixel.shadowlevels.level.LevelListener;
 import top.shadowpixel.shadowlevels.level.LevelManager;
 import top.shadowpixel.shadowlevels.locale.LocaleManager;
-import top.shadowpixel.shadowlevels.object.Metrics;
 import top.shadowpixel.shadowlevels.object.hooks.PlaceholderHook;
 import top.shadowpixel.shadowlevels.object.listeners.DataListener;
 import top.shadowpixel.shadowlevels.reward.RewardList;
@@ -145,7 +133,7 @@ public final class ShadowLevels extends AbstractPlugin {
                 this,
                 "ShadowLevels",
                 "XiaoJin_awa_",
-                "1.4.0").check()) {
+                "1.4.1").check()) {
             MLogger.error("Messages.OnEnable.Error-Plugin_yml");
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -249,31 +237,8 @@ public final class ShadowLevels extends AbstractPlugin {
 
     public void initCommands() {
         //Register command
-        registerCommandHandler();
-        var command = this.commandHandler.registerCommand("ShadowLevels", new MainCommand());
-
-        //Add subcommands
-        assert command != null;
-        command.addCommand(
-                new AdminCommand(),
-                new AddLevelsCommand(),
-                new AddExpsCommand(),
-                new AddRandomExpsCommand(),
-                new CreateLevelsCommand(),
-                new CreateRewardCommand(),
-                new HelpCommand(),
-                new ReloadCommand(),
-                new RemoveLevelsCommand(),
-                new RemoveExpsCommand(),
-                new ResetCommand(),
-                new StatsCommand(),
-                new SetLevelsCommand(),
-                new SetExpsCommand(),
-                new SetMultipleCommand(),
-                new OpenRewardCommand(),
-                new RewardCommand(),
-                new StatsOfflineCommand()
-        );
+        registerNewCommandHandler();
+        getNewCommandHandler().addCommand(new MainCommand());
     }
 
     public @Nullable RewardList getRewardList(@NotNull String name) {

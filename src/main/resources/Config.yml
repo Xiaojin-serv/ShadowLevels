@@ -33,10 +33,6 @@ Data:
     Table: 'shadowlevels_data'
     #SQLite数据库文件保存位置
     File: '%default%/PlayerData.db'
-  #如果玩家数据无法载入, 将如何处理?
-  #KICK => 踢出玩家
-  #NOTICE => 提醒玩家
-  Failed-to-Load-Action: KICK
   #Bungee跨服同步模式
   #请参照教程安装ShadowMessenger及其扩展!
   Bungee-Mode: false

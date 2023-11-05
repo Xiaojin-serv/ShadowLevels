@@ -41,8 +41,8 @@ dependencies {
 }
 
 group = 'top.shadowpixel'
-version = '1.4.0'
-description = 'ShadowLevels'
+version = '1.4.1'
+
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 tasks.withType(JavaCompile).configureEach {

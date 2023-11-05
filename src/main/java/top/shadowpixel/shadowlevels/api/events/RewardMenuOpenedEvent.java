@@ -12,11 +12,11 @@ import top.shadowpixel.shadowlevels.reward.RewardMenu;
 public class RewardMenuOpenedEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
 
-    private final Player     player;
-    private final Level      level;
+    private final Player player;
+    private final Level level;
     private final RewardMenu rewardMenu;
 
-    public RewardMenuOpenedEvent(Player player, Level level, RewardMenu rewardMenu) {
+    public RewardMenuOpenedEvent(@NotNull Player player, @NotNull Level level, @NotNull RewardMenu rewardMenu) {
         this.player = player;
         this.level = level;
         this.rewardMenu = rewardMenu;

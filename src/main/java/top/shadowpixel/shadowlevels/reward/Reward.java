@@ -17,14 +17,13 @@ import java.util.EnumMap;
 import java.util.List;
 
 public class Reward {
-
     private final EnumMap<RewardStatus, ExecutableEvent> events = new EnumMap<>(RewardStatus.class);
-    private final EnumMap<RewardStatus, ItemStack>       items  = new EnumMap<>(RewardStatus.class);
+    private final EnumMap<RewardStatus, ItemStack> items = new EnumMap<>(RewardStatus.class);
 
     @Getter
-    private final List<String>
-            permissions = new ArrayList<>(),
-            rewards     = new ArrayList<>();
+    private final List<String> permissions = new ArrayList<>();
+    @Getter
+    private final List<String> rewards = new ArrayList<>();
     @Getter
     private final String name;
 
@@ -62,8 +61,8 @@ public class Reward {
         }
     }
 
-    @Deprecated
-    public List<String> getRewardLores() {
+    @NotNull
+    public List<String> getRewardLore() {
         return rewards;
     }
 
@@ -109,13 +108,11 @@ public class Reward {
     }
 
     public ExecutableEvent getEvent(Player player, RewardStatus status) {
-        return events.getOrDefault(status,
-                RewardManager.defaultEvents.get(LocaleUtils.getLocale(player).getName()).get(status));
+        return events.getOrDefault(status, RewardManager.defaultEvents.get(LocaleUtils.getLocale(player).getName()).get(status));
     }
 
     private void loadItem(RewardStatus status, Configuration section) {
-        Configuration customs = section.getConfigurationSection("Custom-Items"),
-                item;
+        Configuration customs = section.getConfigurationSection("Custom-Items"), item;
 
         var name = status.getName();
         if (customs != null && (item = customs.getConfigurationSection(name)) != null) {

@@ -48,11 +48,11 @@ public class DataHandler {
     }
 
     @SuppressWarnings("unused")
-    public static void modifyExps(@NotNull String name, @NotNull String level, @NotNull ModificationType type, int amount) {
+    public static void modifyExps(@NotNull String name, @NotNull String level, @NotNull ModificationType type, double amount) {
         modifyExps(null, name, level, type, amount);
     }
 
-    public static void modifyExps(@Nullable CommandSender sender, @NotNull String name, @NotNull String level, @NotNull ModificationType type, int amount) {
+    public static void modifyExps(@Nullable CommandSender sender, @NotNull String name, @NotNull String level, @NotNull ModificationType type, double amount) {
         if (!isBungeeMode()) {
             OfflineHandler.modifyExpsOffline(sender, name, level, type, amount);
             return;
@@ -144,6 +144,7 @@ public class DataHandler {
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isBungeeMode() {
         return plugin.getConfiguration().getBoolean("Data.Bungee-Mode") && plugin.getServer().getPluginManager().isPluginEnabled("ShadowMessenger");
     }
@@ -188,7 +189,7 @@ public class DataHandler {
             }
         }
 
-        private static void modifyExpsOffline(@Nullable CommandSender sender, String name, String level, ModificationType type, int amount) {
+        private static void modifyExpsOffline(@Nullable CommandSender sender, String name, String level, ModificationType type, double amount) {
             var modified = false;
             switch (type) {
                 case ADD:

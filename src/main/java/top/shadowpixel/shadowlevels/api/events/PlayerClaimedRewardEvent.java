@@ -16,7 +16,7 @@ public class PlayerClaimedRewardEvent extends Event {
     private final Level  level;
     private final Reward reward;
 
-    public PlayerClaimedRewardEvent(Player player, Level level, Reward reward) {
+    public PlayerClaimedRewardEvent(@NotNull Player player, @NotNull Level level, @NotNull Reward reward) {
         this.player = player;
         this.level = level;
         this.reward = reward;

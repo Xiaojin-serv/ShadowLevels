@@ -1,6 +1,5 @@
 package top.shadowpixel.shadowlevels.level;
 
-import lombok.Getter;
 import lombok.ToString;
 import lombok.var;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -27,19 +26,17 @@ import java.util.Objects;
 @SerializableAs("ShadowLevels-Level")
 @ToString
 public class Level implements ConfigurationSerializable {
-
     private final HashMap<String, Map<String, ExecutableEvent>> events = new HashMap<>();
 
-    @Getter
     private final String  name;
-    private Integer maxLevels, requiredExps;
-    private HashMap<Integer, Integer>      expsToLevel;
+    private int maxLevels = 100,
+                requiredExps = 5000,
+                defaultLevel = 0;
+    private HashMap<Integer, Integer> expsToLevel;
     private LinkedHashMap<Integer, String> colors;
 
     public Level(String name) {
         this.name = name;
-        this.maxLevels = 100;
-        this.requiredExps = 5000;
         this.expsToLevel = new HashMap<>();
         this.expsToLevel.put(1, 100);
         this.colors = new LinkedHashMap<>();
@@ -52,6 +49,9 @@ public class Level implements ConfigurationSerializable {
     @SuppressWarnings("unchecked")
     public Level(Map<String, Object> map) {
         this.name = map.getOrDefault("Name", "Unnamed").toString();
+        if (map.containsKey("Default-level")) {
+            this.defaultLevel = (int) map.get("Default-level");
+        }
 
         if (map.containsKey("Max-levels")) {
             this.maxLevels = (int) map.get("Max-levels");
@@ -122,6 +122,13 @@ public class Level implements ConfigurationSerializable {
     }
 
     /**
+     * @return Name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
      * @return The max levels of this level
      * @deprecated Some players may be using permissions to limit their max levels.
      * Use {@link #getDefaultMaxLevels()} instead.
@@ -159,7 +166,7 @@ public class Level implements ConfigurationSerializable {
 
     /**
      * @param nextLevel The level that required
-     * @return The exps that're required to level up, of level >= max level, 0 will be returned
+     * @return The exps required to level up. If nextLevel >= max level, 0 will be returned
      */
     public int getRequiredExps(int nextLevel) {
         if (nextLevel > maxLevels) {
@@ -185,9 +192,10 @@ public class Level implements ConfigurationSerializable {
      * @param player Player
      * @return Exps that player has to upgrade
      */
-    public int getRequiredExps(Player player) {
+    public double getRequiredExps(Player player) {
         if (isMax(player)) {
-            return getLevelData(player).getExps();
+            return getLevelData(player).getExps
+                    ();
         }
 
         return getRequiredExps(getLevelData(player).levels + 1);
@@ -198,6 +206,13 @@ public class Level implements ConfigurationSerializable {
      */
     public int getDefaultRequiredExps() {
         return requiredExps;
+    }
+
+    /**
+     * @return Default level
+     */
+    public int getDefaultLevel() {
+        return defaultLevel;
     }
 
     /**
@@ -298,6 +313,7 @@ public class Level implements ConfigurationSerializable {
         map.put("Name", name);
         map.put("Max-levels", maxLevels);
         map.put("Colors", colors);
+        map.put("Default-level", defaultLevel);
         map.put("Default-exps-to-level-up", requiredExps);
         map.put("Custom-exps-to-level-up", expsToLevel);
         return map;

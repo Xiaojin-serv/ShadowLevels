@@ -11,7 +11,7 @@ import top.shadowpixel.shadowlevels.ShadowLevels;
 import top.shadowpixel.shadowlevels.api.events.*;
 import top.shadowpixel.shadowlevels.data.DataManager;
 import top.shadowpixel.shadowlevels.reward.RewardManager;
-import top.shadowpixel.shadowlevels.util.event.EventUtils;
+import top.shadowpixel.shadowlevels.util.Utils;
 
 /**
  * Events about modification of level(s), exp(s) and multiple(s).
@@ -39,7 +39,7 @@ public class LevelListener implements Listener {
         var level = event.getLevelSystem();
         var data = level.getLevelData(player);
         var type = event.getModificationType();
-        ExecutableEvent eevent = ExecutableEvent.emptyEvent();
+        var eevent = ExecutableEvent.emptyEvent();
 
         //Data operation
         switch (type) {
@@ -62,8 +62,8 @@ public class LevelListener implements Listener {
         eevent.replace("%prefix%", ShadowLevels::getPrefix);
         eevent.replace("%level-system%", level::getName);
 
-        //Event executation
-        EventUtils.call(new PlayerLevelsModifiedEvent(player, event.getOldLevels(), value, level, type));
+        //Event execution
+        Utils.callEvent(new PlayerLevelsModifiedEvent(player, event.getOldLevels(), value, level, type));
     }
 
     /**
@@ -81,7 +81,7 @@ public class LevelListener implements Listener {
         var level = event.getLevelSystem();
         var data = level.getLevelData(player);
         var type = event.getModificationType();
-        ExecutableEvent eevent = ExecutableEvent.emptyEvent();
+        var eevent = ExecutableEvent.emptyEvent();
 
         //Data operation
         switch (type) {
@@ -107,7 +107,7 @@ public class LevelListener implements Listener {
 
         //Event executation
         EventExecutor.execute(plugin, player, eevent);
-        EventUtils.call(new PlayerExpsModifiedEvent(player, event.getOldExps(), value, level, type));
+        Utils.callEvent(new PlayerExpsModifiedEvent(player, event.getOldExps(), value, level, type));
     }
 
     /**
@@ -135,7 +135,7 @@ public class LevelListener implements Listener {
 
         //Event executation
         EventExecutor.execute(plugin, player, eevent);
-        EventUtils.call(new PlayerMultipleModifiedEvent(player, level, event.getOldValue(), value));
+        Utils.callEvent(new PlayerMultipleModifiedEvent(player, level, event.getOldValue(), value));
 
         //Save data
         DataManager.getInstance().save(player);
@@ -153,6 +153,10 @@ public class LevelListener implements Listener {
         //Variables initialization
         var player = event.getPlayer();
         var level = event.getLevelSystem();
+        if (level == null) {
+            return;
+        }
+
         var data = level.getLevelData(player);
         var eevent = level.getEvent(player, "Reset");
 
@@ -168,7 +172,7 @@ public class LevelListener implements Listener {
 
         //Event executation
         EventExecutor.execute(plugin, player, eevent);
-        EventUtils.call(new AfterPlayerDataResetEvent(player, level));
+        Utils.callEvent(new AfterPlayerDataResetEvent(player, level));
 
         //Update exp bar
         LevelManager.getInstance().updateExperienceBar(player);

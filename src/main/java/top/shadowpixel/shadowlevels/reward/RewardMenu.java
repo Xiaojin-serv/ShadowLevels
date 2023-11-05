@@ -7,7 +7,6 @@ import org.bukkit.event.inventory.InventoryEvent;
 import top.shadowpixel.shadowcore.api.function.EventExecutor;
 import top.shadowpixel.shadowcore.api.function.components.ExecutableEvent;
 import top.shadowpixel.shadowcore.api.menu.components.MenuItem;
-import top.shadowpixel.shadowcore.api.menu.components.MenuPage;
 import top.shadowpixel.shadowcore.api.menu.impl.PlayerMenu;
 import top.shadowpixel.shadowcore.util.entity.SenderUtils;
 import top.shadowpixel.shadowcore.util.text.ReplaceUtils;
@@ -18,7 +17,7 @@ import top.shadowpixel.shadowlevels.api.events.RewardMenuOpenedEvent;
 import top.shadowpixel.shadowlevels.data.DataManager;
 import top.shadowpixel.shadowlevels.level.Level;
 import top.shadowpixel.shadowlevels.util.ItemUtils;
-import top.shadowpixel.shadowlevels.util.event.EventUtils;
+import top.shadowpixel.shadowlevels.util.Utils;
 
 public class RewardMenu extends PlayerMenu {
 
@@ -79,7 +78,7 @@ public class RewardMenu extends PlayerMenu {
             }
         }
 
-        for (MenuPage page : getPages().values()) {
+        for (var page : getPages().values()) {
             for (int i = 0; i < page.size(); i++) {
                 page.getProperty().setUnclickable(i);
             }
@@ -111,7 +110,7 @@ public class RewardMenu extends PlayerMenu {
                     data.addReceivedReward(rewardList, reward.getName());
                     setItem(event.getSlot(), getRewardItem(level, reward, 3));
                     EventExecutor.execute(ShadowLevels.getInstance(), player, reward.getUnlockedEvent());
-                    EventUtils.call(new PlayerClaimedRewardEvent(player, level, reward));
+                    Utils.callEvent(new PlayerClaimedRewardEvent(player, level, reward));
                 });
                 break;
             case 2:
@@ -184,7 +183,7 @@ public class RewardMenu extends PlayerMenu {
     public void openMenu() {
         super.openMenu();
         this.checkPerms();
-        EventUtils.call(new RewardMenuOpenedEvent(player, this.rewardList.getLevel(), this));
+        Utils.callEvent(new RewardMenuOpenedEvent(player, this.rewardList.getLevel(), this));
     }
 
     @Override
@@ -194,7 +193,7 @@ public class RewardMenu extends PlayerMenu {
         //Save data
         if (event instanceof InventoryCloseEvent) {
             DataManager.getInstance().save((Player) ((InventoryCloseEvent) event).getPlayer());
-            EventUtils.call(new RewardMenuClosedEvent(player, this.rewardList.getLevel(), this));
+            Utils.callEvent(new RewardMenuClosedEvent(player, this.rewardList.getLevel(), this));
         }
     }
 

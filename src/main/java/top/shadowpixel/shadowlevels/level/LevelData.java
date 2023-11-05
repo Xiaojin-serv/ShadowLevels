@@ -16,12 +16,11 @@ import top.shadowpixel.shadowlevels.api.events.*;
 import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 import top.shadowpixel.shadowlevels.reward.Reward;
 import top.shadowpixel.shadowlevels.reward.RewardList;
-import top.shadowpixel.shadowlevels.util.event.EventUtils;
+import top.shadowpixel.shadowlevels.util.Utils;
 
 import java.util.*;
 
-import static top.shadowpixel.shadowcore.util.object.NumberUtils.asFloat;
-import static top.shadowpixel.shadowcore.util.object.NumberUtils.asInt;
+import static top.shadowpixel.shadowcore.util.object.NumberUtils.*;
 
 @SuppressWarnings({"unused", "LombokGetterMayBeUsed"})
 @SerializableAs("ShadowLevels-LevelData")
@@ -29,31 +28,23 @@ import static top.shadowpixel.shadowcore.util.object.NumberUtils.asInt;
 public class LevelData implements ConfigurationSerializable {
 
     @Getter
-    protected int levels = 0, /**
-     * -- GETTER --
-     *
-     * @return Current experiences;
-     */
-            exps         = 0;
-    /**
-     * -- GETTER --
-     *
-     * @return Current empirical magnification
-     */
+    protected int levels = 0;
     @Getter
-    protected float                         multiple        = 1.0F;
+    protected double exps = 0;
+    @Getter
+    protected float multiple = 1.0F;
     protected HashMap<String, List<String>> receivedRewards = new HashMap<>(0);
-    private   Player                        player;
-    private   Level                         level;
+    private Player player;
+    private Level level;
 
     public LevelData() {
     }
 
-    public LevelData(Player player, Level level) {
-        this(player, level, 0, 0, 1.0F);
+    public LevelData(@Nullable Player player, @NotNull Level level) {
+        this(player, level, level.getDefaultLevel(), 0, 1.0F);
     }
 
-    public LevelData(Player player, Level level, int levels, int exps, float multiple) {
+    public LevelData(@Nullable Player player, @NotNull Level level, int levels, int exps, float multiple) {
         this(player, level, levels, exps, multiple, new HashMap<>());
     }
 
@@ -73,7 +64,7 @@ public class LevelData implements ConfigurationSerializable {
         }
 
         if (map.containsKey("exps")) {
-            this.exps = asInt(map.get("exps"), 0);
+            this.exps = asDouble(map.get("exps"), 0);
         }
 
         if (map.containsKey("multiple")) {
@@ -95,7 +86,7 @@ public class LevelData implements ConfigurationSerializable {
             return;
 
         var oldValue = this.levels;
-        EventUtils.call(new PlayerLevelsModifyEvent(player, oldValue, amount, level, ModificationType.SET));
+        Utils.callEvent(new PlayerLevelsModifyEvent(player, oldValue, amount, level, ModificationType.SET));
     }
 
     public void setLevelsSilently(int amount) {
@@ -110,15 +101,15 @@ public class LevelData implements ConfigurationSerializable {
      *
      * @param amount Exp(s) to set
      */
-    public void setExps(int amount) {
+    public void setExps(double amount) {
         if (amount < 0 || amount == this.exps)
             return;
 
         var oldValue = this.exps;
-        EventUtils.call(new PlayerExpsModifyEvent(player, oldValue, amount, level, ModificationType.SET));
+        Utils.callEvent(new PlayerExpsModifyEvent(player, oldValue, amount, level, ModificationType.SET));
     }
 
-    public void setExpsSilently(int amount) {
+    public void setExpsSilently(double amount) {
         if (amount < 0 || amount == this.exps)
             return;
 
@@ -128,7 +119,7 @@ public class LevelData implements ConfigurationSerializable {
     /**
      * @return Exps that player wants to upgrade
      */
-    public int getRequiredExps() {
+    public double getRequiredExps() {
         return level.getRequiredExps(player);
     }
 
@@ -140,7 +131,7 @@ public class LevelData implements ConfigurationSerializable {
             return;
 
         var oldValue = this.multiple;
-        EventUtils.call(new PlayerMultipleModifyEvent(player, level, oldValue, amount));
+        Utils.callEvent(new PlayerMultipleModifyEvent(player, level, oldValue, amount));
     }
 
     public void setMultipleSilently(float amount) {
@@ -153,7 +144,7 @@ public class LevelData implements ConfigurationSerializable {
     /**
      * @return Exps the player has ever received
      */
-    public long getTotalExps() {
+    public double getTotalExps() {
         var total = exps;
         int i = 0;
         while ( i < levels ) {
@@ -261,7 +252,7 @@ public class LevelData implements ConfigurationSerializable {
             return;
 
         var oldValue = this.levels;
-        EventUtils.call(new PlayerLevelsModifyEvent(player, oldValue, amount, level, ModificationType.ADD));
+        Utils.callEvent(new PlayerLevelsModifyEvent(player, oldValue, amount, level, ModificationType.ADD));
     }
 
     public void addLevelsSilently(int amount) {
@@ -276,15 +267,15 @@ public class LevelData implements ConfigurationSerializable {
      *
      * @param amount Exp(s) to add
      */
-    public void addExps(int amount) {
+    public void addExps(double amount) {
         if (amount < 1)
             return;
 
         var oldValue = this.exps;
-        EventUtils.call(new PlayerExpsModifyEvent(player, oldValue, amount, level, ModificationType.ADD));
+        Utils.callEvent(new PlayerExpsModifyEvent(player, oldValue, amount, level, ModificationType.ADD));
     }
 
-    public void addExpsSilently(int amount) {
+    public void addExpsSilently(double amount) {
         if (amount < 1)
             return;
 
@@ -325,7 +316,7 @@ public class LevelData implements ConfigurationSerializable {
         amount = Math.min(levels, amount);
 
         var oldValue = this.levels;
-        EventUtils.call(new PlayerLevelsModifyEvent(player, oldValue, amount, level, ModificationType.REMOVE));
+        Utils.callEvent(new PlayerLevelsModifyEvent(player, oldValue, amount, level, ModificationType.REMOVE));
     }
 
     public void removeLevelsSilently(int amount) {
@@ -341,15 +332,15 @@ public class LevelData implements ConfigurationSerializable {
      *
      * @param amount Exp(s) to remove
      */
-    public void removeExps(int amount) {
+    public void removeExps(double amount) {
         if (amount < 0)
             return;
 
         var oldValue = this.exps;
-        EventUtils.call(new PlayerExpsModifyEvent(player, oldValue, amount, level, ModificationType.REMOVE));
+        Utils.callEvent(new PlayerExpsModifyEvent(player, oldValue, amount, level, ModificationType.REMOVE));
     }
 
-    public void removeExpsSilently(int amount) {
+    public void removeExpsSilently(double amount) {
         if (amount < 0)
             return;
 
@@ -360,7 +351,7 @@ public class LevelData implements ConfigurationSerializable {
      * Reset data.
      */
     public void reset() {
-        EventUtils.call(new PlayerDataResetEvent(player, level));
+        Utils.callEvent(new PlayerDataResetEvent(player, level));
     }
 
     public void resetSilently() {
@@ -432,7 +423,7 @@ public class LevelData implements ConfigurationSerializable {
                 EventExecutor.execute(ShadowLevels.getInstance(), player, level.getLevelUpEvent(player, this.levels));
             }
 
-            EventUtils.call(new PlayerLevelUpEvent(player, this.level));
+            Utils.callEvent(new PlayerLevelUpEvent(player, this.level));
         }
     }
 

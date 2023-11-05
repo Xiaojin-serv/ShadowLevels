@@ -8,11 +8,11 @@ import top.shadowpixel.shadowlevels.level.Level;
 
 @Getter
 public class PlayerLevelUpEvent extends AbstractPlayerEvent {
-
     private static final HandlerList handlerList = new HandlerList();
-    private final        Level       levelSystem;
 
-    public PlayerLevelUpEvent(@NotNull Player who, Level level) {
+    private final Level levelSystem;
+
+    public PlayerLevelUpEvent(@NotNull Player who, @NotNull Level level) {
         super(who);
         this.levelSystem = level;
     }

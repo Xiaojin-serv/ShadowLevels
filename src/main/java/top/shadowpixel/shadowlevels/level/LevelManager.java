@@ -154,33 +154,35 @@ public class LevelManager implements Manager {
             return;
         }
 
-        try {
-            //Read line
-            var lines = FileUtils.readAllLines(Objects.requireNonNull(plugin.getResource("Levels/Default.yml")),
-                    "$name$", name);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                //Read line
+                var lines = FileUtils.readAllLines(Objects.requireNonNull(plugin.getResource("Levels/Default.yml")),
+                        "$name$", name);
 
-            //Write to local
-            file.createNewFile();
-            Files.write(file.toPath(), lines);
+                //Write to local
+                file.createNewFile();
+                Files.write(file.toPath(), lines);
 
-            //Add to config
-            ConfigurationUtils.add(this.plugin.getConfiguration(), "Levels.Enabled", name);
-            //noinspection DataFlowIssue
-            ConfigurationProvider.getProvider("Yaml")
-                    .save(plugin.getConfiguration("Config"), ShadowLevels.getConfigFile());
+                //Add to config
+                ConfigurationUtils.add(this.plugin.getConfiguration(), "Levels.Enabled", name);
+                //noinspection DataFlowIssue
+                ConfigurationProvider.getProvider("Yaml")
+                        .save(plugin.getConfiguration("Config"), ShadowLevels.getConfigFile());
 
-            //Load
-            var newLevel = new Level(name);
-            this.loadedLevels.put(name, newLevel);
+                //Load
+                var newLevel = new Level(name);
+                this.loadedLevels.put(name, newLevel);
 
-            //Add empty level data to online players
-            DataManager.getInstance().getLoadedData().values().forEach(v ->
-                    v.getLevels().put(name, new LevelData(Bukkit.getPlayer(v.getOwner()), newLevel)));
+                //Add empty level data to online players
+                DataManager.getInstance().getLoadedData().values().forEach(v ->
+                        v.getLevels().put(name, new LevelData(Bukkit.getPlayer(v.getOwner()), newLevel)));
 
-            MLogger.info("Messages.Levels.Created-Successfully");
-        } catch (Exception e) {
-            MLogger.error("Messages.Levels.Failed-to-Create", e);
-        }
+                MLogger.info("Messages.Levels.Created-Successfully");
+            } catch (Exception e) {
+                MLogger.error("Messages.Levels.Failed-to-Create", e);
+            }
+        });
     }
 
     public void updateExperienceBar(Player player) {

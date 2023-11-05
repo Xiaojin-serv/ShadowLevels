@@ -23,7 +23,7 @@ public class JsonDataModifier extends AbstractDataModifier {
     public @Nullable PlayerData load(@NotNull UUID uuid, @NotNull File file) {
         Configuration config;
         try {
-            config = Objects.requireNonNull(ConfigurationProvider.getProvider("Json")).load(file);
+            config = ConfigurationProvider.getJsonConfigurationProvider().load(file);
         } catch (IOException e) {
             return null;
         }
@@ -41,7 +41,7 @@ public class JsonDataModifier extends AbstractDataModifier {
     public @Nullable PlayerData load(@NotNull UUID uuid, Reader reader) {
         Configuration config;
         try {
-            config = Objects.requireNonNull(ConfigurationProvider.getProvider("Json")).load(reader);
+            config = ConfigurationProvider.getJsonConfigurationProvider().load(reader);
         } catch (IOException e) {
             return null;
         }
@@ -85,7 +85,7 @@ public class JsonDataModifier extends AbstractDataModifier {
         config.set("PlayerData", data);
 
         try {
-            Objects.requireNonNull(ConfigurationProvider.getProvider("Json")).save(config, getDataFile(uuid));
+            ConfigurationProvider.getJsonConfigurationProvider().save(config, getDataFile(uuid));
             return true;
         } catch (IOException e) {
             return false;
@@ -97,7 +97,7 @@ public class JsonDataModifier extends AbstractDataModifier {
         try {
             var config = new Configuration();
             config.set("PlayerData", data);
-            Objects.requireNonNull(ConfigurationProvider.getProvider("Json")).save(config, getDataFile(data.getOwner()));
+            ConfigurationProvider.getJsonConfigurationProvider().save(config, getDataFile(data.getOwner()));
             return true;
         } catch (Throwable e) {
             return false;

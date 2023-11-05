@@ -9,12 +9,12 @@ import top.shadowpixel.shadowlevels.level.Level;
 
 @Getter
 public class PlayerDataResetEvent extends AbstractPlayerEvent implements Cancellable {
-
     private static final HandlerList handlerList = new HandlerList();
-    private final        Level       levelSystem;
-    private              Boolean     cancel      = false;
 
-    public PlayerDataResetEvent(@NotNull Player who, Level levelSystem) {
+    private final Level levelSystem;
+    private Boolean cancel = false;
+
+    public PlayerDataResetEvent(@NotNull Player who, @NotNull Level levelSystem) {
         super(who);
         this.levelSystem = levelSystem;
     }

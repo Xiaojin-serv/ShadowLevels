@@ -12,16 +12,16 @@ import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 @Getter
 @ToString
 public class PlayerExpsModifyEvent extends AbstractPlayerEvent implements Cancellable {
-
     private static final HandlerList handlerList = new HandlerList();
-    private final        Integer     oldExps, value;
+
+    private final double oldExps, value;
     @Getter
-    private final Level            levelSystem;
+    private final Level levelSystem;
     @Getter
     private final ModificationType modificationType;
-    private       Boolean          cancel = false;
+    private Boolean cancel = false;
 
-    public PlayerExpsModifyEvent(@NotNull Player who, Integer oldExps, Integer value, Level level, ModificationType modificationType) {
+    public PlayerExpsModifyEvent(@NotNull Player who, double oldExps, double value, Level level, ModificationType modificationType) {
         super(who);
         this.oldExps = oldExps;
         this.value = value;

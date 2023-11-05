@@ -9,15 +9,15 @@ import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 
 @Getter
 public class PlayerMultipleModifiedEvent extends AbstractPlayerEvent {
-
     private static final HandlerList handlerList = new HandlerList();
-    private final        Level       levelSystem;
+
+    private final Level levelSystem;
     @Getter
-    private final        Float       oldMultiple, value;
+    private final Float oldMultiple, value;
     @Getter
     private final ModificationType modificationType = ModificationType.SET;
 
-    public PlayerMultipleModifiedEvent(@NotNull Player who, Level levelSystem, Float oldMultiple, Float value) {
+    public PlayerMultipleModifiedEvent(@NotNull Player who, @NotNull Level levelSystem, float oldMultiple, float value) {
         super(who);
         this.levelSystem = levelSystem;
         this.oldMultiple = oldMultiple;

@@ -9,15 +9,15 @@ import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 
 @Getter
 public class PlayerExpsModifiedEvent extends AbstractPlayerEvent {
-
     private static final HandlerList handlerList = new HandlerList();
-    private final        Integer     value, oldExps;
+
+    private final double value, oldExps;
     @Getter
-    private final Level            levelSystem;
+    private final Level levelSystem;
     @Getter
     private final ModificationType modificationType;
 
-    public PlayerExpsModifiedEvent(@NotNull Player who, Integer oldExps, Integer value, Level levelSystem, ModificationType modificationType) {
+    public PlayerExpsModifiedEvent(@NotNull Player who, double oldExps, double value, Level levelSystem, ModificationType modificationType) {
         super(who);
         this.oldExps = oldExps;
         this.value = value;

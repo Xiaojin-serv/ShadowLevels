@@ -16,9 +16,8 @@ import java.util.UUID;
 @SerializableAs("ShadowLevels-PlayerData")
 @ToString
 public class PlayerData implements ConfigurationSerializable {
-
     private UUID owner;
-    private Map<String, LevelData> levelDatas = new HashMap<>();
+    private Map<String, LevelData> levelData = new HashMap<>();
 
     public PlayerData(UUID owner) {
         this.owner = owner;
@@ -27,7 +26,7 @@ public class PlayerData implements ConfigurationSerializable {
     @SuppressWarnings({"unchecked", "unused"})
     public PlayerData(Map<String, Object> map) {
         if (map.containsKey("Levels")) {
-            this.levelDatas = (Map<String, LevelData>) map.get("Levels");
+            this.levelData = (Map<String, LevelData>) map.get("Levels");
         }
     }
 
@@ -44,18 +43,18 @@ public class PlayerData implements ConfigurationSerializable {
 
     @Nullable
     public LevelData getLevelData(String name) {
-        return MapUtils.smartMatch(name, levelDatas);
+        return MapUtils.smartMatch(name, levelData);
     }
 
     public Map<String, LevelData> getLevels() {
-        return levelDatas;
+        return levelData;
     }
 
     @NotNull
     @Override
     public Map<String, Object> serialize() {
         var dataMap = new HashMap<String, Object>();
-        dataMap.put("Levels", this.levelDatas);
+        dataMap.put("Levels", this.levelData);
         return dataMap;
     }
 }

@@ -14,7 +14,6 @@ import top.shadowpixel.shadowlevels.level.LevelManager;
 import java.util.UUID;
 
 public class BungeeListener implements PluginMessageListener {
-
     private final ShadowLevels plugin;
 
     public BungeeListener() {
@@ -83,7 +82,7 @@ public class BungeeListener implements PluginMessageListener {
         var data = plugin.getDataManager().getPlayerData(uuid).getLevelData(levelSystem);
         assert data != null;
 
-        var amount = input.readInt();
+        var amount = input.readDouble();
         switch (action.toLowerCase()) {
             case "add":
                 data.addExps(amount);
