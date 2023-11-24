@@ -96,7 +96,7 @@ public class DataHandler {
                         }
                     } else {
                         OfflineHandler.modifyMultipleOffline(sender, name, level, amount);
-                    }
+                    };
                 });
 
         showMessage(sender, "through-bungee");
