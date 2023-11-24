@@ -2,7 +2,7 @@ package top.shadowpixel.shadowlevels.data;
 
 public enum ModificationStatus {
     SUCCESS,
-    SUCCESS_BC,
+    PROXY_MODE,
     PLAYER_NOT_FOUND,
     ILLEGAL_ARGUMENT
 }

@@ -16,6 +16,8 @@ public class NewDataHandler {
         if (!isBungeeMode()) {
             return OfflineHandler.modifyLevelsOffline(playerName, levelName, type, amount);
         }
+
+        return ModificationStatus.PROXY_MODE;
     }
 
     @NotNull
@@ -23,6 +25,38 @@ public class NewDataHandler {
         if (!isBungeeMode()) {
             return OfflineHandler.modifyExpsOffline(playerName, levelName, type, amount);
         }
+        
+        return ModificationStatus.PROXY_MODE;
+    }
+
+    @NotNull
+    public static ModificationStatus modifyMultiple(@NotNull String playerName, @NotNull String levelName, float amount) {
+        if (!isBungeeMode()) {
+            return OfflineHandler.modifyMultipleOffline(playerName, levelName, amount);
+        }
+        
+        return ModificationStatus.PROXY_MODE;
+    }
+
+    
+    @NotNull
+    public static ModificationStatus reset(@NotNull String playerName, @NotNull String levelName) {
+        if (levelName.equals("*")) return resetAll(playerName);
+
+        if (!isBungeeMode()) {
+            return OfflineHandler.resetOffline(playerName, levelName);
+        }
+        
+        return ModificationStatus.PROXY_MODE;
+    }
+    
+    @NotNull
+    public static ModificationStatus resetAll(@NotNull String playerName) {
+        if (!isBungeeMode()) {
+            return OfflineHandler.resetAllOffline(playerName);
+        }
+        
+        return ModificationStatus.PROXY_MODE;
     }
 
     public static boolean isBungeeMode() {
