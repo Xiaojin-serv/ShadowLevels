@@ -1,2 +1,11 @@
 # 项目排除路径
-/.gradle/
+/.gradle/.lightly
+.c_bin
+.classes
+logs
+*.log
+node_modules
+dist
+dist-ssr
+*.local
+.lightly
