@@ -38,8 +38,11 @@ public class AddExpsCommand extends LevelCommand {
 
     @Override
     public boolean executeOffline(@NotNull CommandContext ctx, @NotNull String player, @NotNull Level level, @NotNull CommandArgument value) {
-        var arguments = ctx.arguments();
-        DataHandler.modifyExps(ctx.sender(), arguments[1].getValue(), arguments[2].getValue(), ModificationType.ADD, value.getDouble());
+        CommandUtils.checkValidNumber(value);
+        var mod = NewDataHandler.modifyExps(arguments[1].getValue(), arguments[2].getValue(), ModificationType.ADD, value.getValue())
+        
+        // var arguments = ctx.arguments();
+        // DataHandler.modifyExps(ctx.sender(), arguments[1].getValue(), arguments[2].getValue(), ModificationType.ADD, value.getDouble());
         return true;
     }
 }

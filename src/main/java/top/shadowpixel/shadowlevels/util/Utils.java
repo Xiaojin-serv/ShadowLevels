@@ -26,4 +26,30 @@ public class Utils {
 
         return amount;
     }
+
+    public static boolean isValidNumber(@NotNull String num) {
+        if (num.endsWith("%")) {
+            num = num.substring(0, num.length() - 1);
+        }
+
+        return StringUtils.isNumber(num);
+    }
+
+    public static boolean isValidNumber(@NotNull CommandArgument argument) {
+        return isValidNumber(argument.getValue());
+    }
+
+    public static void showMessage(@NotNull CommandSender sender, @NotNull ModificationStatus status, @NotNull CommandArgument argument, @NotNull Consumer<CommandSender> success) {
+        switch (status) {
+            case ModificationStatus.SUCCESS:
+                success.accept(sender);
+                break;
+            case ModificationStatus.PROXY_MODE:
+                SenderUtils.sendMessage(sender, LocaleUtils.getMessage(sender, "Messages.Data.Through-Bungee"));
+                break;
+            case ModificationStatus.PLAYER_NOT_FOUND:
+                throw new ParameterizedCommandInterruptedException(argument, "player not found");
+                break;
+        }
+    }
 }
