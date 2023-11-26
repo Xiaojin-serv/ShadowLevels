@@ -41,7 +41,7 @@ dependencies {
 }
 
 group = 'top.shadowpixel'
-version = '1.4.1'
+version = '1.4.2'
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
@@ -59,9 +59,21 @@ processResources {
 }
 
 tasks.withType(Jar).configureEach {
-    destinationDirectory.set(file("E:\\服务器\\测试服务器\\Paper - 1.8.8\\plugins"))
+//    destinationDirectory.set(file("E:\\服务器\\测试服务器\\Paper - 1.8.8\\plugins"))
 }
 
 tasks.withType(Javadoc).configureEach {
     options.encoding = 'UTF-8'
+}
+
+publishing {
+    publications {
+        ShadowLevels(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
 }

@@ -39,7 +39,7 @@ public class CommandUtils {
     }
 
     public static void checkValidNumber(@NotNull CommandArgument argument) {
-        if (!Utils.isValidNumber(num.getValue())) {
+        if (!Utils.isValidNumber(argument)) {
             throw new ParameterizedCommandInterruptedException(argument, "not double");
         }
     }

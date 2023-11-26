@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import top.shadowpixel.shadowcore.api.command_v2.CommandContext;
 import top.shadowpixel.shadowcore.api.command_v2.component.CommandArgument;
 import top.shadowpixel.shadowlevels.command.sub.LevelCommand;
+import top.shadowpixel.shadowlevels.data.ModificationStatus;
 import top.shadowpixel.shadowlevels.data.DataHandler;
 import top.shadowpixel.shadowlevels.level.Level;
 import top.shadowpixel.shadowlevels.level.LevelData;
@@ -22,21 +23,19 @@ public class RemoveLevelsCommand extends LevelCommand {
     public boolean execute(@NotNull CommandContext ctx, @NotNull Player player, @NotNull LevelData levelData, @NotNull CommandArgument value) {
         var amount = value.getInt();
         levelData.removeLevels(amount);
-        if (ctx.arguments().length >= 5 &&  !ctx.arguments()[4].getValue().equalsIgnoreCase("true")) {
-            return true;
-        }
-
-        LocaleUtils.sendCmdMessage(ctx.sender(), "Success.Remove-Levels",
-                "%player%", player.getName(),
-                "%amount%", String.valueOf(amount),
-                "%level-system%", levelData.getLevel().getName());
-        return true;
+        return ctx.arguments().length < 5 || ctx.arguments()[4].getValue().equalsIgnoreCase("true");
     }
 
     @Override
-    public boolean executeOffline(@NotNull CommandContext ctx, @NotNull String player, @NotNull Level level, @NotNull CommandArgument value) {
-        var arguments = ctx.arguments();
-        DataHandler.modifyLevels(ctx.sender(), arguments[1].getValue(), arguments[2].getValue(), ModificationType.REMOVE, value.getInt());
-        return true;
+    public void sendSucceedMessage(@NotNull CommandContext ctx, @NotNull String player, @NotNull String level, @NotNull String amount) {
+        LocaleUtils.sendCmdMessage(ctx.sender(), "Success.Remove-Levels",
+                "%player%", player,
+                "%amount%", amount,
+                "%level-system%", level);
+    }
+
+    @Override
+    public ModificationStatus executeOffline(@NotNull CommandContext ctx, @NotNull CommandArgument player, @NotNull Level level, @NotNull CommandArgument value) {
+        return DataHandler.modifyLevels(player.getValue(), level.getName(), ModificationType.REMOVE, value.getValue(), ctx);
     }
 }

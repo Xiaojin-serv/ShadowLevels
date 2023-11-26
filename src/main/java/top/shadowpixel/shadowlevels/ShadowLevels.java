@@ -133,7 +133,7 @@ public final class ShadowLevels extends AbstractPlugin {
                 this,
                 "ShadowLevels",
                 "XiaoJin_awa_",
-                "1.4.1").check()) {
+                "1.4.2").check()) {
             MLogger.error("Messages.OnEnable.Error-Plugin_yml");
             getServer().getPluginManager().disablePlugin(this);
             return;

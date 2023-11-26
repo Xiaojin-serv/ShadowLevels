@@ -14,7 +14,7 @@ Events:
       Reset:
         - '[msg] %prefix%&c您的等级信息已被重置!'
       Player-Received-Exps:
-        - '[msg] &b+ %exps% Exps'
+        - '[msg] &b+ %exps_mul% Exps'
       Player-Set-Exps:
         - '[msg] %prefix%&a您的经验被设置为: %exps%'
       Player-Removed-Exps:

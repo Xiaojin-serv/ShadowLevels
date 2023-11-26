@@ -3,249 +3,219 @@ package top.shadowpixel.shadowlevels.data;
 import lombok.var;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import top.shadowpixel.shadowcore.api.command_v2.CommandContext;
+import top.shadowpixel.shadowcore.api.command_v2.component.CommandArgument;
 import top.shadowpixel.shadowcore.api.uid.UUIDStorage;
-import top.shadowpixel.shadowcore.util.entity.SenderUtils;
 import top.shadowpixel.shadowlevels.ShadowLevels;
 import top.shadowpixel.shadowlevels.level.LevelData;
 import top.shadowpixel.shadowlevels.object.enums.ModificationType;
 import top.shadowpixel.shadowlevels.util.LocaleUtils;
+import top.shadowpixel.shadowlevels.util.Utils;
 import top.shadowpixel.shadowmessenger.ShadowMessenger;
+import top.shadowpixel.shadowmessenger.common.TaskResult;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-/**
- * Modify players' data who aren't in the server(offline or in other servers)
- */
+@SuppressWarnings ({"unused", "BooleanMethodIsAlwaysInverted"})
 public class DataHandler {
+    private static final ShadowLevels plugin = ShadowLevels.getInstance();
 
-    private static ShadowLevels plugin;
-
-    public static void initialize(@NotNull ShadowLevels pl) {
-        plugin = pl;
-    }
-
-    public static void modifyLevels(@Nullable CommandSender sender, @NotNull String name, @NotNull String level, @NotNull ModificationType type, int amount) {
+    @NotNull
+    public static ModificationStatus modifyLevels(@NotNull String playerName, @NotNull String levelName, @NotNull ModificationType type, @NotNull String amount, @NotNull CommandContext... ctx) {
         if (!isBungeeMode()) {
-            OfflineHandler.modifyLevelsOffline(sender, name, level, type, amount);
-            return;
+            return OfflineHandler.modifyLevelsOffline(playerName, levelName, type, amount);
         }
 
-        ShadowMessenger.query("ShadowLevels " + type.getName() + "Level " + name + " " + level + " " + amount,
-                result -> {
-                    if (result.getReturnValue().equalsIgnoreCase("ok")) {
-                        if (sender != null) {
-                            LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Levels",
-                                    "%level-system%", level,
-                                    "%amount%", String.valueOf(amount),
-                                    "%player%", name);
-                            showMessage(sender, "through-bungee", "%name%", name);
-                        }
-                    } else {
-                        OfflineHandler.modifyLevelsOffline(sender, name, level, type, amount);
-                    }
-                });
+        ShadowMessenger.query("ShadowLevels " + type.getName() + "Level " + playerName + " " + levelName + " " + amount,
+                result -> onResult(result, playerName, sender -> LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Levels",
+                        "%level-system%", levelName,
+                        "%amount%", amount,
+                        "%player%", playerName), () -> OfflineHandler.modifyLevelsOffline(playerName, levelName, type, amount), ctx));
+
+        return ModificationStatus.PROXY_MODE;
     }
 
-    @SuppressWarnings("unused")
-    public static void modifyExps(@NotNull String name, @NotNull String level, @NotNull ModificationType type, double amount) {
-        modifyExps(null, name, level, type, amount);
-    }
-
-    public static void modifyExps(@Nullable CommandSender sender, @NotNull String name, @NotNull String level, @NotNull ModificationType type, double amount) {
+    @NotNull
+    public static ModificationStatus modifyExps(@NotNull String playerName, @NotNull String levelName, @NotNull ModificationType type, @NotNull String amount, @NotNull CommandContext... ctx) {
         if (!isBungeeMode()) {
-            OfflineHandler.modifyExpsOffline(sender, name, level, type, amount);
-            return;
+            return OfflineHandler.modifyExpsOffline(playerName, levelName, type, amount);
         }
 
-        ShadowMessenger.query("ShadowLevels " + type.getName() + "Exps " + name + " " + level + " " + amount,
-                result -> {
-                    if (result.getReturnValue().equalsIgnoreCase("OK")) {
-                        if (sender != null) {
-                            LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Exps",
-                                    "%level-system%", level,
-                                    "%amount%", String.valueOf(amount),
-                                    "%player%", name);
-                            showMessage(sender, "through-bungee");
-                        }
-                    } else {
-                        OfflineHandler.modifyExpsOffline(sender, name, level, type, amount);
-                    }
-                });
+        ShadowMessenger.query("ShadowLevels " + type.getName() + "Exps " + playerName + " " + levelName + " " + amount,
+                result -> onResult(result, playerName, sender -> LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Exps",
+                        "%level-system%", levelName,
+                        "%amount%", amount,
+                        "%player%", playerName), () -> OfflineHandler.modifyExpsOffline(playerName, levelName, type, amount), ctx));
+        return ModificationStatus.PROXY_MODE;
     }
 
-    @SuppressWarnings("unused")
-    public static void modifyMultiple(@NotNull String name, @NotNull String level, float amount) {
-        modifyMultiple(null, name, level, amount);
-    }
-
-    public static void modifyMultiple(@Nullable CommandSender sender, @NotNull String name, @NotNull String level, float amount) {
+    @NotNull
+    public static ModificationStatus modifyMultiple(@NotNull String playerName, @NotNull String levelName, float amount, @NotNull CommandContext... ctx) {
         if (!isBungeeMode()) {
-            OfflineHandler.modifyMultipleOffline(sender, name, level, amount);
-            return;
+            return OfflineHandler.modifyMultipleOffline(playerName, levelName, amount);
         }
 
-        ShadowMessenger.query("ShadowLevels SetMultiple " + name + " " + level + " " + amount,
-                result -> {
-                    if (result.getReturnValue().equalsIgnoreCase("OK")) {
-                        if (sender != null) {
-                            LocaleUtils.sendCmdMessage(sender, "Success.Set-Multiple",
-                                    "%level-system%", level,
-                                    "%multiple%", String.valueOf(amount),
-                                    "%player%", name);
-                        }
-                    } else {
-                        OfflineHandler.modifyMultipleOffline(sender, name, level, amount);
-                    };
-                });
-
-        showMessage(sender, "through-bungee");
+        ShadowMessenger.query("ShadowLevels SetMultiple " + playerName + " " + levelName + " " + amount,
+                result -> onResult(result, playerName, sender -> LocaleUtils.sendCmdMessage(sender, "Success.Set-Multiple",
+                            "%level-system%", levelName,
+                            "%amount%", String.valueOf(amount),
+                            "%multiple%", String.valueOf(amount),
+                            "%player%", playerName), () -> OfflineHandler.modifyMultipleOffline(playerName, levelName, amount), ctx));
+        return ModificationStatus.PROXY_MODE;
     }
 
-    public static void reset(@NotNull String name, @NotNull String level) {
-        reset(null, name, level);
-    }
 
-    public static void reset(@Nullable CommandSender sender, @NotNull String name, @NotNull String level) {
+    @NotNull
+    public static ModificationStatus reset(@NotNull String playerName, @NotNull String levelName, @NotNull CommandContext... ctx) {
+        if (levelName.equals("*")) return resetAll(playerName, ctx);
+
         if (!isBungeeMode()) {
-            OfflineHandler.resetOffline(sender, name, level);
-            return;
+            return OfflineHandler.resetOffline(playerName, levelName);
         }
 
-        ShadowMessenger.query("ShadowLevels Reset " + name + " " + level + " 0",
-                result -> {
-                    if (result.getReturnValue().equalsIgnoreCase("OK")) {
-                        if (sender != null) {
-                            SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Success.Reset",
-                                    "%level-system%", level,
-                                    "%player%", name));
-                        }
-                    } else {
-                        OfflineHandler.resetOffline(sender, name, level);
-                    }
-                });
-
-        showMessage(sender, "through-bungee");
+        ShadowMessenger.query("ShadowLevels Reset " + playerName + " " + levelName + " 0",
+                result -> onResult(result, playerName, sender -> LocaleUtils.sendCmdMessage(sender, "Success.Reset",
+                            "%level-system%", levelName,
+                            "%player%", playerName), () -> OfflineHandler.resetOffline(playerName, levelName), ctx));
+        return ModificationStatus.PROXY_MODE;
     }
 
-    private static void showMessage(@Nullable CommandSender sender, @NotNull String type, @Nullable String... replacement) {
-        if (sender != null) {
-            switch (type.toLowerCase()) {
-                case "through-bungee":
-                    SenderUtils.sendMessage(sender, LocaleUtils.getMessage(sender, "Messages.Data.Through-Bungee"));
-                    break;
-                case "player-not-found":
-                    SenderUtils.sendMessage(sender, LocaleUtils.getCmdMessage(sender, "Errors." + "Player-Not-Found"), replacement);
-                    break;
-                case "offline":
-                    SenderUtils.sendMessage(sender, LocaleUtils.getMessage(sender, "Messages.Data.Offline"));
-                    break;
-            }
+    @NotNull
+    public static ModificationStatus resetAll(@NotNull String playerName, @NotNull CommandContext... ctx) {
+        if (!isBungeeMode()) {
+            return OfflineHandler.resetAllOffline(playerName);
         }
+
+        ShadowMessenger.query("ShadowLevels Reset " + playerName + " * 0",
+                result -> onResult(result, playerName, sender -> LocaleUtils.sendCmdMessage(sender, "Success.Reset",
+                            "%level-system%", "*",
+                            "%player%", playerName), () -> OfflineHandler.resetAllOffline(playerName), ctx));
+        return ModificationStatus.PROXY_MODE;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isBungeeMode() {
         return plugin.getConfiguration().getBoolean("Data.Bungee-Mode") && plugin.getServer().getPluginManager().isPluginEnabled("ShadowMessenger");
     }
 
-    private static class OfflineHandler {
+    public static void sendMessage(@NotNull Consumer<CommandSender> cons, @NotNull CommandContext... ctx) {
+        if (ctx != null && ctx.length > 0) {
+            cons.accept(ctx[0].sender());
+        }
+    }
 
-        private static void resetOffline(@Nullable CommandSender sender, String name, String level) {
-            var modified = level.equals("*") ? resetAllOffline(sender, name) : handleLevelOffline(sender, name, level, LevelData::resetSilently);
-            if (sender != null && modified) {
-                LocaleUtils.sendCmdMessage(sender, "Success.Reset",
-                        "%level-system%", level,
-                        "%player%", name);
-                showMessage(sender, "offline");
+    public static void onResult(@NotNull TaskResult result, @NotNull String playerName, @NotNull Consumer<CommandSender> success, Supplier<ModificationStatus> supplier, @NotNull CommandContext... ctx) {
+        if (result.getReturnValue().equalsIgnoreCase("ok")) {
+            sendMessage(success, ctx);
+        } else {
+            var status = supplier.get();
+            if (status.equals(ModificationStatus.PLAYER_NOT_FOUND)) {
+                sendMessage(sender -> LocaleUtils.sendCmdMessage(sender, "Errors.Player-Not-Found",
+                        "%player%", playerName,
+                        "%name%", playerName), ctx);
+            } else {
+                sendMessage(success.andThen(sender -> LocaleUtils.sendMessage(sender, "Messages.Data.Offline")), ctx);
             }
         }
+    }
 
-        private static boolean resetAllOffline(@Nullable CommandSender sender, String name) {
-            return handleDataOffline(sender, name, data -> data.getLevels().values().forEach(LevelData::resetSilently));
+    public static class OfflineHandler {
+
+        @NotNull
+        public static ModificationStatus resetOffline(@NotNull String playerName, @NotNull String levelName) {
+            return levelName.equals("*") ? resetAllOffline(playerName) : handleLevelOffline(playerName, levelName, ld -> {
+                ld.resetSilently();
+                return ModificationStatus.SUCCESS;
+            });
         }
 
-        private static void modifyLevelsOffline(@Nullable CommandSender sender, String name, String level, ModificationType type, int amount) {
-            var modified = false;
-            switch (type) {
-                case ADD:
-                    modified = handleLevelOffline(sender, name, level, data -> data.addLevelsSilently(amount));
-                    break;
-                case REMOVE:
-                    modified = handleLevelOffline(sender, name, level, data -> data.removeLevelsSilently(amount));
-                    break;
-                case SET:
-                    modified = handleLevelOffline(sender, name, level, data -> data.setLevelsSilently(amount));
-                    break;
-            }
-
-            if (!modified) return;
-            if (sender != null) {
-                LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Levels",
-                        "%level-system%", level,
-                        "%amount%", String.valueOf(amount),
-                        "%player%", name);
-                showMessage(sender, "offline");
-            }
+        @NotNull
+        public static ModificationStatus resetAllOffline(@NotNull String playerName) {
+            return handleDataOffline(playerName, data -> {
+                data.getLevels().clear();
+                return ModificationStatus.SUCCESS;
+            });
         }
 
-        private static void modifyExpsOffline(@Nullable CommandSender sender, String name, String level, ModificationType type, double amount) {
-            var modified = false;
-            switch (type) {
-                case ADD:
-                    modified = handleLevelOffline(sender, name, level, data -> data.addExpsSilently(amount));
-                    break;
-                case REMOVE:
-                    modified = handleLevelOffline(sender, name, level, data -> data.removeExpsSilently(amount));
-                    break;
-                case SET:
-                    modified = handleLevelOffline(sender, name, level, data -> data.setExpsSilently(amount));
-                    break;
-            }
+        @NotNull
+        public static ModificationStatus modifyLevelsOffline(@NotNull String playerName, @NotNull String levelName, @NotNull ModificationType type, @NotNull String amount) {
+            return handleLevelOffline(playerName, levelName, data -> {
+                var modAmount = Utils.calcValue(data.getLevels(), new CommandArgument(0, amount));
+                switch (type) {
+                    case ADD:
+                        data.addLevelsSilently((int) modAmount);
+                        break;
+                    case REMOVE:
+                        data.removeLevelsSilently((int) modAmount);
+                        break;
+                    case SET:
+                        data.setLevelsSilently((int) modAmount);
+                        break;
+                }
 
-            if (!modified) return;
-            if (sender != null) {
-                LocaleUtils.sendCmdMessage(sender, "Success." + type.getName() + "-Exps",
-                        "%level-system%", level,
-                        "%amount%", String.valueOf(amount),
-                        "%player%", name);
-                showMessage(sender, "offline");
-            }
+                return ModificationStatus.SUCCESS;
+            });
         }
 
-        private static void modifyMultipleOffline(@Nullable CommandSender sender, String name, String level, float amount) {
-            var modified = handleLevelOffline(sender, name, level, data -> data.setMultipleSilently(amount));
-            if (sender != null && modified) {
-                LocaleUtils.sendCmdMessage(sender, "Success.Set-Multiple",
-                        "%level-system%", level,
-                        "%multiple%", String.valueOf(amount),
-                        "%player%", name);
-                showMessage(sender, "offline");
-            }
+        @NotNull
+        public static ModificationStatus modifyExpsOffline(@NotNull String playerName, @NotNull String levelName, @NotNull ModificationType type, @NotNull String amount) {
+            return handleLevelOffline(playerName, levelName, data -> {
+                var modAmount = Utils.calcValue(data.getExps(), new CommandArgument(0, amount));
+                switch (type) {
+                    case ADD:
+                        data.addExpsSilently((int) modAmount);
+                        break;
+                    case REMOVE:
+                        data.removeExpsSilently((int) modAmount);
+                        break;
+                    case SET:
+                        data.setExpsSilently((int) modAmount);
+                        break;
+                }
+
+                return ModificationStatus.SUCCESS;
+            });
         }
 
-        private static boolean handleLevelOffline(@Nullable CommandSender sender, String name, String level, Consumer<LevelData> consumer) {
-            return handleDataOffline(sender, name, data -> consumer.accept(data.getLevelData(level)));
+        @NotNull
+        public static ModificationStatus modifyMultipleOffline(@NotNull String playerName, @NotNull String levelName, float amount) {
+            return handleLevelOffline(playerName, levelName, levelData -> {
+                levelData.setMultipleSilently(amount);
+                return ModificationStatus.SUCCESS;
+            });
         }
 
-        private static boolean handleDataOffline(@Nullable CommandSender sender, String name, @NotNull Consumer<PlayerData> consumer) {
-            var uuid = UUIDStorage.getUniqueID(name);
+        @NotNull
+        public static ModificationStatus handleLevelOffline(@NotNull String playerName, @NotNull String level, @NotNull Function<LevelData, ModificationStatus> function) {
+            return handleDataOffline(playerName, data -> {
+                var ld = data.getLevelData(level);
+                if (ld == null) {
+                    return ModificationStatus.ILLEGAL_ARGUMENT;
+                }
+
+                return function.apply(ld);
+            });
+        }
+
+        @NotNull
+        public static ModificationStatus handleDataOffline(@NotNull String playerName, @NotNull Function<PlayerData, ModificationStatus> consumer) {
+            var uuid = UUIDStorage.getUniqueID(playerName);
             if (uuid == null) {
-                showMessage(sender, "player-not-found", "%name%", name);
-                return false;
+                return ModificationStatus.PLAYER_NOT_FOUND;
             }
 
-            var dataManager = plugin.getDataManager();
+            var dataManager = DataManager.getInstance();
             var data = dataManager.dataModifier.load(uuid);
             if (data == null) {
-                showMessage(sender, "player-not-found", "%name%", name);
-                return false;
+                return ModificationStatus.PLAYER_NOT_FOUND;
             }
 
+            var status = ModificationStatus.SUCCESS;
             data = dataManager.completeData(data);
-            consumer.accept(data);
+            status = consumer.apply(data);
             dataManager.dataModifier.save(data);
-            return true;
+            return status;
         }
     }
 }

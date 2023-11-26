@@ -63,6 +63,7 @@ public class LevelListener implements Listener {
         eevent.replace("%level-system%", level::getName);
 
         //Event execution
+        EventExecutor.execute(plugin, player, eevent);
         Utils.callEvent(new PlayerLevelsModifiedEvent(player, event.getOldLevels(), value, level, type));
     }
 

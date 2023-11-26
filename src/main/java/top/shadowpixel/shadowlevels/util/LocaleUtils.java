@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import top.shadowpixel.shadowcore.api.config.Configuration;
 import top.shadowpixel.shadowcore.api.locale.Locale;
+import top.shadowpixel.shadowcore.util.entity.SenderUtils;
 import top.shadowpixel.shadowcore.util.text.ReplaceUtils;
 import top.shadowpixel.shadowlevels.ShadowLevels;
 import top.shadowpixel.shadowlevels.object.hooks.LangSwitcherHook;
@@ -36,7 +37,11 @@ public class LocaleUtils {
         return getMessage(sender, "Messages.Command-Messages." + path, replacements);
     }
 
-    public static void sendCmdMessage(@NotNull CommandSender sender, @NotNull String path, String... replacements) {
+    public static void sendMessage(@NotNull CommandSender sender, @NotNull String path, @NotNull String... replacements) {
+        SenderUtils.sendMessage(sender, getMessage(sender, path, replacements));
+    }
+
+    public static void sendCmdMessage(@NotNull CommandSender sender, @NotNull String path, @NotNull String... replacements) {
         sender.sendMessage(getCmdMessage(sender, path, replacements));
     }
 }

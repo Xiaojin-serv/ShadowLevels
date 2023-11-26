@@ -1,11 +1,11 @@
 package top.shadowpixel.shadowlevels.command.sub.exp;
 
-import lombok.var;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.shadowpixel.shadowcore.api.command_v2.CommandContext;
 import top.shadowpixel.shadowcore.api.command_v2.component.CommandArgument;
 import top.shadowpixel.shadowlevels.command.sub.LevelCommand;
+import top.shadowpixel.shadowlevels.data.ModificationStatus;
 import top.shadowpixel.shadowlevels.data.DataHandler;
 import top.shadowpixel.shadowlevels.level.Level;
 import top.shadowpixel.shadowlevels.level.LevelData;
@@ -37,9 +37,15 @@ public class SetExpsCommand extends LevelCommand {
     }
 
     @Override
-    public boolean executeOffline(@NotNull CommandContext ctx, @NotNull String player, @NotNull Level level, @NotNull CommandArgument value) {
-        var arguments = ctx.arguments();
-        DataHandler.modifyExps(ctx.sender(), arguments[1].getValue(), arguments[2].getValue(), ModificationType.SET, value.getDouble());
-        return true;
+    public void sendSucceedMessage(@NotNull CommandContext ctx, @NotNull String player, @NotNull String level, @NotNull String amount) {
+        LocaleUtils.sendCmdMessage(ctx.sender(), "Success.Set-Exps",
+                "%player%", player,
+                "%amount%", amount,
+                "%level-system%", level);
+    }
+
+    @Override
+    public ModificationStatus executeOffline(@NotNull CommandContext ctx, @NotNull CommandArgument player, @NotNull Level level, @NotNull CommandArgument value) {
+        return DataHandler.modifyExps(player.getValue(), level.getName(), ModificationType.SET, value.getValue(), ctx);
     }
 }

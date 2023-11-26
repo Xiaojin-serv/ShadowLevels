@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import top.shadowpixel.shadowcore.api.command_v2.CommandContext;
 import top.shadowpixel.shadowcore.api.command_v2.SubCommand;
 import top.shadowpixel.shadowcore.api.exception.command.ParameterizedCommandInterruptedException;
-import top.shadowpixel.shadowcore.util.entity.SenderUtils;
 import top.shadowpixel.shadowlevels.ShadowLevels;
 import top.shadowpixel.shadowlevels.command.sub.*;
 import top.shadowpixel.shadowlevels.command.sub.exp.AddExpsCommand;
@@ -17,6 +16,7 @@ import top.shadowpixel.shadowlevels.command.sub.level.AddLevelsCommand;
 import top.shadowpixel.shadowlevels.command.sub.level.CreateLevelCommand;
 import top.shadowpixel.shadowlevels.command.sub.level.RemoveLevelsCommand;
 import top.shadowpixel.shadowlevels.command.sub.level.SetLevelsCommand;
+import top.shadowpixel.shadowlevels.command.sub.multiple.SetMultipleCommand;
 import top.shadowpixel.shadowlevels.command.sub.reward.CreateRewardCommand;
 import top.shadowpixel.shadowlevels.command.sub.reward.OpenRewardCommand;
 import top.shadowpixel.shadowlevels.command.sub.reward.RewardCommand;
@@ -52,7 +52,9 @@ public class MainCommand extends SubCommand {
                 /* Reward */
                 new RewardCommand(),
                 new OpenRewardCommand(),
-                new CreateRewardCommand()
+                new CreateRewardCommand(),
+                /* Multiple */
+                new SetMultipleCommand()
         );
 
         this.exceptionHandlers.clear();
@@ -68,9 +70,14 @@ public class MainCommand extends SubCommand {
                 ctx -> LocaleUtils.sendCmdMessage(ctx.sender(), "Errors.No-Permissions"));
         addExceptionHandler("no argument", t -> t instanceof IndexOutOfBoundsException,
                 ctx -> {
+                    var num = ctx.exception().getMessage();
+                    if (num.toLowerCase().startsWith("index")) {
+                        num = num.split(" ")[1];
+                    }
+
                     ctx.sender().sendMessage(LocaleUtils.getCmdMessage(ctx.sender(),
                             "Errors.Params-Error",
-                            "%pos%", String.valueOf(Integer.parseInt(ctx.exception().getMessage()) + 1)));
+                            "%pos%", String.valueOf(Integer.parseInt(num) + 1)));
                     return true;
                 });
 
@@ -89,7 +96,8 @@ public class MainCommand extends SubCommand {
                 case "player not found":
                     LocaleUtils.sendCmdMessage(ctx.sender(), "Errors.Player-Not-Found",
                             "%pos%", String.valueOf(argument.getIndex() + 1),
-                            "%name%", argument.getValue());
+                            "%name%", argument.getValue(),
+                            "%player%", argument.getValue());
                     return true;
                 case "level not found":
                     LocaleUtils.sendCmdMessage(ctx.sender(), "Errors.Level-Not-Found",
@@ -114,7 +122,7 @@ public class MainCommand extends SubCommand {
         }
 
         var sender = ctx.sender();
-        SenderUtils.sendMessage(sender, LocaleUtils.getMessage(sender, "Messages.Info"),
+        LocaleUtils.sendMessage(sender, "Messages.Info",
                 "%cmd%", ctx.label(),
                 "%version%", ShadowLevels.getVersion());
         return true;

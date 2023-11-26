@@ -8,10 +8,13 @@ import top.shadowpixel.shadowcore.api.command_v2.CommandContext;
 import top.shadowpixel.shadowcore.api.command_v2.SubCommand;
 import top.shadowpixel.shadowcore.api.command_v2.component.CommandArgument;
 import top.shadowpixel.shadowcore.util.collection.ListUtils;
+import top.shadowpixel.shadowlevels.data.ModificationStatus;
 import top.shadowpixel.shadowlevels.level.Level;
 import top.shadowpixel.shadowlevels.level.LevelData;
 import top.shadowpixel.shadowlevels.level.LevelManager;
 import top.shadowpixel.shadowlevels.util.CommandUtils;
+import top.shadowpixel.shadowlevels.util.LocaleUtils;
+import top.shadowpixel.shadowlevels.util.Utils;
 
 import java.util.Collection;
 
@@ -31,10 +34,21 @@ public abstract class LevelCommand extends SubCommand {
         var value = argument[3];
         var player = argument[1].getPlayer();
         if (player == null) {
-            return executeOffline(ctx, argument[1].getValue(), level, value);
+            CommandUtils.checkValidNumber(value);
+            var status = executeOffline(ctx, argument[1], level, value);
+            Utils.showMessage(ctx.sender(), status, argument[1], () -> {
+                LocaleUtils.sendMessage(ctx.sender(), "Messages.Data.Offline");
+                sendSucceedMessage(ctx, argument[1].getValue(), level.getName(), value.getValue());
+            });
+            return true;
         }
 
-        return execute(ctx, player, level.getLevelData(player), value);
+        var result = execute(ctx, player, level.getLevelData(player), value);
+        if (result) {
+            sendSucceedMessage(ctx, player.getName(), level.getName(), value.getValue());
+        }
+
+        return true;
     }
 
     @Override
@@ -53,7 +67,9 @@ public abstract class LevelCommand extends SubCommand {
 
     public abstract boolean execute(@NotNull CommandContext ctx, @NotNull Player player, @NotNull LevelData levelData, @NotNull CommandArgument value);
 
-    public abstract boolean executeOffline(@NotNull CommandContext ctx, @NotNull String player, @NotNull Level level, @NotNull CommandArgument value);
+    public abstract void sendSucceedMessage(@NotNull CommandContext ctx, @NotNull String player, @NotNull String level, @NotNull String amount);
+
+    public abstract ModificationStatus executeOffline(@NotNull CommandContext ctx, @NotNull CommandArgument player, @NotNull Level level, @NotNull CommandArgument value);
 
     @NotNull
     public Level getLevel(@NotNull CommandArgument argument) {

@@ -26,7 +26,7 @@ public class ResetCommand extends SubCommand {
         var player = arguments[1].getPlayer();
         if (arguments[2].getValue().equals("*")) {
             if (player == null) {
-                DataHandler.reset(sender, arguments[1].getValue(), "*");
+                DataHandler.reset(arguments[1].getValue(), "*", ctx);
                 return true;
             }
 
@@ -43,7 +43,7 @@ public class ResetCommand extends SubCommand {
         }
 
         if (player == null) {
-            DataHandler.reset(sender, arguments[1].getValue(), arguments[2].getValue());
+            DataHandler.reset(arguments[1].getValue(), arguments[2].getValue(), ctx);
             return true;
         }
 

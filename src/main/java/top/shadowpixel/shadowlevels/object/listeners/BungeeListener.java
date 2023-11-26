@@ -7,9 +7,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
+import top.shadowpixel.shadowcore.api.command_v2.component.CommandArgument;
 import top.shadowpixel.shadowlevels.ShadowLevels;
 import top.shadowpixel.shadowlevels.bungee.BungeeManager;
 import top.shadowpixel.shadowlevels.level.LevelManager;
+import top.shadowpixel.shadowlevels.util.Utils;
 
 import java.util.UUID;
 
@@ -64,16 +66,16 @@ public class BungeeListener implements PluginMessageListener {
         var data = plugin.getDataManager().getPlayerData(uuid).getLevelData(levelSystem);
         assert data != null;
 
-        var amount = input.readInt();
+        var amount = Utils.calcValue(data.getLevels(), new CommandArgument(114514, input.readUTF()));
         switch (action.toLowerCase()) {
             case "add":
-                data.addLevels(amount);
+                data.addLevels((int) amount);
                 break;
             case "set":
-                data.setLevels(amount);
+                data.setLevels((int) amount);
                 break;
             case "remove":
-                data.removeLevels(amount);
+                data.removeLevels((int) amount);
                 break;
         }
     }
@@ -82,7 +84,7 @@ public class BungeeListener implements PluginMessageListener {
         var data = plugin.getDataManager().getPlayerData(uuid).getLevelData(levelSystem);
         assert data != null;
 
-        var amount = input.readDouble();
+        var amount = Utils.calcValue(data.getExps(), new CommandArgument(114514, input.readUTF()));
         switch (action.toLowerCase()) {
             case "add":
                 data.addExps(amount);

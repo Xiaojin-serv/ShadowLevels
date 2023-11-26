@@ -89,8 +89,6 @@ public class DataManager implements Manager {
 
             loadOnline();
         }
-
-        DataHandler.initialize(plugin);
     }
 
     @Override
